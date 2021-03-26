@@ -15,7 +15,7 @@
       </li>
     </ul>
     <button v-on:click="signIn(ID, PW)" class="signIn">Sign In</button>
-    <button v-on:click="signUp" class="signUp">Sign Up</button>
+    <button><router-link to="/new-account" tag="button" class="signUp">Sign Up</router-link></button>
   </article>
 </template>
 
@@ -33,7 +33,7 @@ export default {
       const response = await fetch("http://localhost:8080/user/login", {
         method: "POST",
         headers: {'Content-Type' : 'application/json'},
-        body: JSON.stringify({ID, PW})
+        body: JSON.stringify({id:ID, pw:PW})
       });
       if(response.status === 200){
         try {
@@ -42,7 +42,7 @@ export default {
             alert("아이디와 패스워드가 일치하지 않습니다.");
           }else{
             alert(`${result}님 환영합니다.`);
-            location.href = "Notepad.html";
+            this.$router.push('/notepad')
           }
         }catch (err){
           console.error(err);
@@ -50,7 +50,7 @@ export default {
       }
     },
     signUp(){
-      location.href = "NewAccount.html";
+      location.href = "NewAccount.vue";
     }
   }
 }

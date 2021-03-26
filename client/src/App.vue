@@ -1,23 +1,16 @@
 <template>
-
   <div id="app">
-    <router-link to="/"></router-link>
+    <router-view></router-view>
   </div>
-  <router-view />
-  <div id="new-account"></div>
 </template>
 
 <script>
-// import Login from './components/Login'
 export default {
   name: 'App',
   data(){
     return {
       initData: "",
     }
-  },
-  components : {
-
   },
   methods :{
     // async sessionCheck(){
