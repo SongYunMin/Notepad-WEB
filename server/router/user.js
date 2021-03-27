@@ -7,7 +7,6 @@ const router = express.Router();
 // const doAsync = fn => async (req, res, next) => await fn(req, res, next).catch(next);
 
 router.get('/idCheck', async (req, res) => {
-    // TODO : Callback to Promise
     try {
         const result = await db.User.findAll({attributes: ['ID']});
         for (const node of result) {
