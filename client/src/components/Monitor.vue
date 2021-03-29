@@ -9,9 +9,10 @@
 </template>
 
 <script>
-import Header from '@/components/Header'
-import Tabs from '@/components/Tabs'
-import Editor from '@/components/Editor'
+import Header from '@/components/Header';
+import Tabs from '@/components/Tabs';
+import Editor from '@/components/Editor';
+// import {useStore} from "vuex";
 
 export default {
   name: "Monitor",
@@ -36,7 +37,7 @@ export default {
         } else {
           console.log("정상 접근");
           console.log(result);
-          return result;
+          this.initData = result;
         }
       }
       this.initialize();
@@ -47,12 +48,19 @@ export default {
         console.log("DATA_NOT_FOUND");
       } else {
         for (let i = 0; i < init.count; i++) {
-          this.$emit('addTab');
+          this.addTab();
         }
       }
     },
+    addTab(){
+      console.log("add Tab!!");
+      // TODO : $store.commit Undefined
+      console.log(this.$store);
+    },
     loadTab(data) {
       // TODO : Vuex 및 mapGetter 활용 https://madplay.github.io/post/why-do-we-need-vuex
+      console.log(data.name);
+      console.log(data.memo);
 
     },
   }

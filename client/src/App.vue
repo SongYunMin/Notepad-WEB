@@ -5,11 +5,29 @@
 </template>
 
 <script>
+import {computed} from 'vue';
+import {useStore} from 'vuex';
+
+function useNotepad(){
+  const store = useStore();
+
+  const tab = computed(() => store.state.tabList);
+
+  return {
+    tab,
+  }
+}
+
 export default {
   name: 'App',
   data(){
     return {
       initData: "",
+    }
+  },
+  setup(){
+    return {
+      ...usePerson()
     }
   },
   methods :{

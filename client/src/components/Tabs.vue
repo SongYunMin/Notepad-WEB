@@ -9,6 +9,9 @@ export default {
     return {
       tabList : []
     }
+  },
+  methods(){
+
   }
 }
 </script>
