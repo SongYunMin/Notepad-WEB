@@ -1,6 +1,8 @@
 <template>
   <section class="monitor-main">
-    <Header/>
+    <Header
+        @load-tab="loadTab"
+    />
     <Tabs/>
     <Editor/>
   </section>
@@ -13,18 +15,18 @@ import Editor from '@/components/Editor'
 
 export default {
   name: "Monitor",
-  data(){
+  data() {
     return {
       initData: this.checkSessionRequest(),
     }
   },
-  components:{
+  components: {
     Header,
     Tabs,
     Editor
   },
-  methods:{
-    async checkSessionRequest(){
+  methods: {
+    async checkSessionRequest() {
       const response = await fetch("http://localhost:8080/notepad/check");
       if (response.status === 200) {
         const result = await response.text();
@@ -39,16 +41,20 @@ export default {
       }
       this.initialize();
     },
-    initialize(){
+    initialize() {
       const init = JSON.parse(this.initData);
-      if(init.DATA === "DATA_NOT_FOUND"){
+      if (init.DATA === "DATA_NOT_FOUND") {
         console.log("DATA_NOT_FOUND");
-      }else{
-        for(let i=0;i<init.count;i++){
-
+      } else {
+        for (let i = 0; i < init.count; i++) {
+          this.$emit('addTab');
         }
       }
-    }
+    },
+    loadTab(data) {
+      // TODO : Vuex 및 mapGetter 활용 https://madplay.github.io/post/why-do-we-need-vuex
+
+    },
   }
 }
 </script>
