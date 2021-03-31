@@ -7,12 +7,13 @@ const router = express.Router();
 // const doAsync = fn => async (req, res, next) => await fn(req, res, next).catch(next);
 
 router.get('/idCheck', async (req, res) => {
+    console.log("아이디 체크 !!!!!");
     try {
         const result = await db.User.findAll({attributes: ['ID']});
         for (const node of result) {
+            console.log(node.ID, ":::" , req.query.id);
             if (node.ID === req.query.id) {
                 res.send('False');
-                return -1;
             }
         }
         res.send('OK');

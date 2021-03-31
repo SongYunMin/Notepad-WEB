@@ -52,7 +52,7 @@ export default {
       }
     },
     signUp(){
-      location.href = "NewAccount.vue";
+      location.href = 'NewAccount.vue'
     }
   }
 }

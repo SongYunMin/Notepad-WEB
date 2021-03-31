@@ -15,10 +15,8 @@
           <input v-model="PW" class="pwInput" type="password"/>
         </li>
       </ul>
-      <button v-on:click="signIn(ID, PW)" class="signIn">Sign In</button>
-      <button>
-        <router-link to="/new-account" tag="button" class="signUp">Sign Up</router-link>
-      </button>
+      <button @click="signIn(ID, PW)" class="signIn">Sign In</button>
+      <button @click="newAccount" class="signUp">Sign Up</button>
     </article>
   </div>
 </template>
@@ -28,10 +26,17 @@ export default {
   name: 'Login',
   data () {
     return {
-      test: 0
+      sel: 0,
+      ID: '',
+      PW: ''
     }
   },
+  component: {
+  },
   methods: {
+    newAccount () {
+      this.$emit('sign-up')
+    },
     async signIn (ID, PW) {
       const response = await fetch('http://localhost:3000/user/login', {
         method: 'POST',
@@ -52,9 +57,6 @@ export default {
           console.error(err)
         }
       }
-    },
-    signUp () {
-      location.href = 'NewAccount.vue'
     }
   }
 }
