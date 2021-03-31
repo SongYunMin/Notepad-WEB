@@ -1,63 +1,66 @@
 <template>
-  <header class="title" id="title">
-    <p>Notepad Service Login</p>
-  </header>
+  <div id="header">
+    <header class="title" id="title">
+      <p>Notepad Service Login</p>
+    </header>
 
-  <article class="login">
-    <ul class="loginBox">
-      <li class="loginBoxID">
-        <span class="idName">ID</span>
-        <input v-model="ID" class="idInput" type="text"/>
-      </li>
-      <li class="loginBoxPW">
-        <span class="pwName">Password</span>
-        <input v-model="PW" class="pwInput" type="password"/>
-      </li>
-    </ul>
-    <button v-on:click="signIn(ID, PW)" class="signIn">Sign In</button>
-    <button><router-link to="/new-account" tag="button" class="signUp">Sign Up</router-link></button>
-  </article>
+    <article class="login">
+      <ul class="loginBox">
+        <li class="loginBoxID">
+          <span class="idName">ID</span>
+          <input v-model="ID" class="idInput" type="text"/>
+        </li>
+        <li class="loginBoxPW">
+          <span class="pwName">Password</span>
+          <input v-model="PW" class="pwInput" type="password"/>
+        </li>
+      </ul>
+      <button v-on:click="signIn(ID, PW)" class="signIn">Sign In</button>
+      <button>
+        <router-link to="/new-account" tag="button" class="signUp">Sign Up</router-link>
+      </button>
+    </article>
+  </div>
 </template>
 
 <script>
 export default {
-  name: "Login",
-  data(){
+  name: 'Login',
+  data () {
     return {
-      ID : "",
-      PW : "",
+      test: 0
     }
   },
-  methods:{
-    async signIn(ID, PW){
-      const response = await fetch("http://localhost:8080/user/login", {
-        method: "POST",
-        headers: {'Content-Type' : 'application/json'},
-        body: JSON.stringify({id:ID, pw:PW})
-      });
-      if(response.status === 200){
+  methods: {
+    async signIn (ID, PW) {
+      const response = await fetch('http://localhost:3000/user/login', {
+        method: 'POST',
+        mode: 'cors',
+        credentials: 'include',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({id: ID, pw: PW})
+      })
+      if (response.status === 200) {
         try {
-          const result = await response.text();
-          if(result === 'False'){
-            alert("아이디와 패스워드가 일치하지 않습니다.");
-          }else{
-            alert(`${result}님 환영합니다.`);
-            this.$router.push('/notepad')
+          const result = await response.text()
+          if (result === 'False') {
+            alert('아이디와 패스워드가 일치하지 않습니다.')
+          } else {
+            alert(`${result}님 환영합니다.`)
           }
-        }catch (err){
-          console.error(err);
+        } catch (err) {
+          console.error(err)
         }
       }
     },
-    signUp(){
-      location.href = "NewAccount.vue";
+    signUp () {
+      location.href = 'NewAccount.vue'
     }
   }
 }
 </script>
 
 <style scoped>
-/* Login.html */
 .title{
   display: flex;
   justify-content: center;
@@ -95,5 +98,4 @@ export default {
   width: 100px;
   background: antiquewhite;
 }
-
 </style>

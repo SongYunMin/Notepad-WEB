@@ -51,6 +51,7 @@ router.post('/login', async (req, res) => {
                     pw: key.toString('base64'),
                     authorization: true
                 }
+                console.log(req.session.user);
              }
             res.send(node.nickname.toString());
             return 1;

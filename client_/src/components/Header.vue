@@ -15,7 +15,7 @@ export default {
   },
   methods : {
     async loadEvent(){
-      const search = prompt('불러올 메모의 제목을 입력하세요.')
+      const search = prompt("불러올 메모의 제목을 입력하세요.");
       const response = await fetch(`http://localhost:3000/notepad/load?name=${search}`,{
         mode: 'cors',
         credentials: 'include'
@@ -28,10 +28,20 @@ export default {
         });
       }
     }
-
   }
+}
 </script>
 
 <style scoped>
+.main-header {
+  width: 100%;
+  background: beige;
+  text-align: right;
+}
 
+.main-header button {
+  width: 120px;
+  height: 45px;
+  font-size: 140%;
+}
 </style>

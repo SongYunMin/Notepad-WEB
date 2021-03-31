@@ -1,3 +1,3 @@
 export const NOTEPAD = {
-    INIT : 'INIT',
+    INIT : 'init',
 }

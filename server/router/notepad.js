@@ -3,9 +3,11 @@ const router = express.Router();
 const db = require('../models');
 
 router.get('/check', async (req, res) => {
+    console.log("세션", req.session);
     if (req.session.user) {       // 사용자 데이터(Session)가 있다면
         console.log("Session...OK");
     } else {                      // 세션이 없는데 Notepad 접근 시
+        console.log(req.session.user);
         res.send('False');
         return 'False';
     }
@@ -41,7 +43,7 @@ router.get('/check', async (req, res) => {
     // return 1;
 });
 
-router.post('/save-notepad', async (req, res) => {
+router.post('/save-notepad_SQL.sql', async (req, res) => {
     if (req.body.name.indexOf('../') !== -1) {
         res.send("Unable to access.");
         return -1;

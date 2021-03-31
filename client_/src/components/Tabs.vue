@@ -1,5 +1,5 @@
 <template>
-  <ul class="tabs-main"></ul>
+  <ul class="tabs-main" ref="tab"></ul>
 </template>
 
 <script>

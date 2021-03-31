@@ -1,0 +1,36 @@
+<template>
+  <div id="app">
+    <router-view></router-view>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'App',
+  data(){
+    return {
+      initData: "",
+    }
+  },
+
+  methods :{
+    // async sessionCheck(){
+    //   const response = await fetch("http://localhost:3000/notepad/check");
+    //   if (response.status === 200) {
+    //     const result = await response.text();
+    //     if (result === 'False') {
+    //       alert("비정상 접근입니다. 다시 로그인 해주세요.");
+    //       location.href = "Login.html";
+    //     } else {
+    //       console.log("정상 접근");
+    //       this.initData = result;
+    //     }
+    //   }
+    // },
+  }
+}
+</script>
+
+<style>
+
+</style>
