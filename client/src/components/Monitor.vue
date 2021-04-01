@@ -1,7 +1,7 @@
 <template>
   <section id='monitor' class="monitor-main">
     <Header @load-tab="loadTab" @add-tab="addTab"/>
-    <Tabs ref="addTab"/>
+    <Tabs @show-tab='showTab' ref="addTab"/>
     <Editor/>
   </section>
 </template>
@@ -49,12 +49,14 @@ export default {
 
       }
     },
+    addTab () {
+      this.$refs.addTab.addTab()
+    },
     loadTab (data) {
 
     },
-    addTab () {
-      console.log(this.initData)
-      this.$refs.addTab.addTab()
+    showTab () {
+
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <li class="tab-main" ref="tab">
-    <button class="tab-button">{{this.name + this.index}}</button>
+    <button @click='showTab' class="tab-button">{{this.name}}</button>
     <button @click='closeTab' class="close-button">x</button>
   </li>
 </template>
@@ -38,6 +38,9 @@ export default {
     closeTab () {
       console.log(this.index)
       this.$emit('close-tab')
+    },
+    showTab () {
+      this.$emit('show-tab')
     }
   }
 }

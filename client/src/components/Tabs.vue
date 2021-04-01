@@ -1,7 +1,13 @@
 <template>
   <ul id='list' class="tabs-main">
 <!--    <Tab ref="addTab"/>-->
-    <component @close-tab="removeTab(index)" v-for="(item, index) in tabList" :is="item" :key="index" ref="addTab"></component>
+    <component @show-tab='showTab(index)'
+               @close-tab="removeTab(index)"
+               v-for="(item, index) in tabList"
+               :is="item"
+               :key="index"
+               ref="addTab">
+    </component>
   </ul>
 </template>
 
@@ -29,6 +35,9 @@ export default {
     removeTab (index) {
       console.log(index)
       this.tabList.splice(index, 1)
+    },
+    showTab (index) {
+      this.$emit('show-tab')
     },
     init (initData) {
       for (let i = 0; i < initData.notepad.length; i++) {
