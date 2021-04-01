@@ -52,6 +52,7 @@ export default {
             alert('아이디와 패스워드가 일치하지 않습니다.')
           } else {
             alert(`${result}님 환영합니다.`)
+            this.$emit('sign-in')
           }
         } catch (err) {
           console.error(err)
