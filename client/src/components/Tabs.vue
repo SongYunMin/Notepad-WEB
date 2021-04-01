@@ -1,23 +1,23 @@
 <template>
   <ul id='list' class="tabs-main">
-<!--    <Tab ref="addTab"/>-->
-    <component @show-tab='showTab(index)'
-               @close-tab="removeTab(index)"
-               v-for="(item, index) in tabList"
-               :is="item"
-               :key="index"
-               ref="tab">
-    </component>
+    <!--    <Tab ref="addTab"/>-->
+    <Tab @show-tab='showTab'
+         @close-tab="removeTab(index)"
+         v-for="(item, index) of list"
+         :tabIndex="index"
+         :key="index">
+    </Tab>
   </ul>
 </template>
 
 <script>
 import Tab from '@/components/Tab'
+
 export default {
   name: 'Tabs',
   data () {
     return {
-      tabList: [],
+      // tabList: [],
       counter: 0,
       selectedTab: null,
       tab: Tab
@@ -26,20 +26,23 @@ export default {
   components: {
     Tab
   },
+  props: {
+    list: Array
+  },
   methods: {
     addTab () {
-      this.tabList.push({name: 'asd', memo: 'zxc'})
-      console.log(this.$refs.tab)
-      this.select(this.tab)
-      this.counter++
-      return this.tab
+      // this.tabList.push({name: 'sd', memo: 'zxc'})
+      // console.log(this.$refs.tab)
+      // this.select(this.tab)
+      // this.counter++
+      // return this.tab
     },
     removeTab (index) {
-      console.log(index)
-      this.tabList.splice(index, 1)
+      // console.log(index)
+      // this.tabList.splice(index, 1)
     },
     showTab (index) {
-      this.$emit('show-tab')
+      this.$emit('show-tab', index)
     },
     init (initData) {
       for (let i = 0; i < initData.notepad.length; i++) {

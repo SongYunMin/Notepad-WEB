@@ -1,7 +1,7 @@
 <template>
   <section id='monitor' class="monitor-main">
     <Header @load-tab="loadTab" @add-tab="addTab"/>
-    <Tabs @show-tab='showTab' ref="tabs"/>
+    <Tabs @show-tab='showTab' :list="list"/>
     <Editor ref="editor"/>
   </section>
 </template>
@@ -16,7 +16,9 @@ export default {
   data () {
     return {
       initData: this.checkSessionRequest(),
-      tabs: Tabs
+      tabs: Tabs,
+      list: [],
+      currentShowPage: 0
     }
   },
   components: {
@@ -51,15 +53,16 @@ export default {
     },
     addTab () {
       // TODO : 새로운 탭 받아와서 에디터에 뿌려야 함
-      this.$refs.tabs.addTab()
+      this.list.push({name: 'sd', memo: 'asd'})
+      // this.$refs.tabs.addTab()
       // console.log(newTab.methods.getInfo())
       // this.$refs.editor.render(newTab.getInfo())
     },
     loadTab (data) {
 
     },
-    showTab () {
-
+    showTab (index) {
+      this.currentShowPage = index
     }
   }
 }

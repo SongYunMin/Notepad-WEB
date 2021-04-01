@@ -2,7 +2,7 @@
   <li class="tab-main">
     <button @click='showTab' class="tab-button">{{this.name}}</button>
     <button @click='closeTab'
-            class="close-button">x</button>
+            class="close-button">{{ tabIndex }}</button>
   </li>
 </template>
 
@@ -15,6 +15,9 @@ export default {
       name: 'Tab',
       memo: null
     }
+  },
+  props: {
+    tabIndex: Number
   },
   methods: {
     setName (newName) {
@@ -41,7 +44,7 @@ export default {
       this.$emit('close-tab')
     },
     showTab () {
-      this.$emit('show-tab')
+      this.$emit('show-tab', this.tabIndex)
     }
   }
 }
