@@ -41,6 +41,7 @@ export default {
       this.$emit('count-check')
     },
     closeTab () {
+    // TODO :
       this.$emit('close-tab')
     },
     showTab () {

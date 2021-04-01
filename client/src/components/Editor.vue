@@ -1,8 +1,8 @@
 <template>
   <article class="editor-main" ref="showTab render">
     <label>
-      <input type="text" class="name" placeholder="제목을 입력하세요"/>
-      <textarea class="memo" placeholder="메모를 입력하세요"></textarea>
+      <input v-model="data.name" type="text" class="name" placeholder="제목을 입력하세요"/>
+      <textarea v-model="data.memo" class="memo" placeholder="메모를 입력하세요"></textarea>
     </label>
   </article>
 </template>
@@ -16,6 +16,9 @@ export default {
       memo: '',
       dom: document.querySelector('.editor-main')
     }
+  },
+  props: {
+    data: Object
   },
   methods: {
     hide () {

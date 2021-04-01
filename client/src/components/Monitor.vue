@@ -2,7 +2,7 @@
   <section id='monitor' class="monitor-main">
     <Header @load-tab="loadTab" @add-tab="addTab"/>
     <Tabs @show-tab='showTab' :list="list"/>
-    <Editor ref="editor"/>
+    <Editor :data="currentPage"/>
   </section>
 </template>
 
@@ -17,6 +17,7 @@ export default {
     return {
       initData: this.checkSessionRequest(),
       tabs: Tabs,
+      // TODO : 서버로부터 받은 값을 저장
       list: [],
       currentShowPage: 0
     }
@@ -25,6 +26,12 @@ export default {
     Header,
     Tabs,
     Editor
+  },
+  computed: {
+    currentPage () {
+    // TODO : 리스트는 0개인데 현재 페이지도 0이면 오류 (예외처리)
+      return this.list[this.currentShowPage]
+    }
   },
   methods: {
     async checkSessionRequest () {
@@ -36,7 +43,7 @@ export default {
         const result = await response.text()
         if (result === 'False') {
           alert('비정상 접근입니다. 다시 로그인 해주세요.')
-          location.href = 'Login.html'
+          // location.href = 'Login.html'
         } else {
           this.initData = result
         }

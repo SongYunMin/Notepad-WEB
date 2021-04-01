@@ -5,7 +5,7 @@ const initRouter = require('./router/init');
 const userRouter = require('./router/user');
 const notepadRouter = require('./router/notepad');
 
-const {sequelize} = require('./models');
+const { sequelize } = require('./models');
 sequelize.sync();
 
 const session = require('express-session');
@@ -21,7 +21,6 @@ app.use(session({
     saveUninitialized: true,
     cookie: {maxAge: 600000}
 }));
-
 
 app.use(express.json());
 app.use(express.static('./public'));
