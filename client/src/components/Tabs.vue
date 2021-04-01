@@ -1,7 +1,7 @@
 <template>
   <ul id='list' class="tabs-main">
-    <Tab ref="addTab"/>
-    <component v-for="(item, index) in tabList" :is="item" :key="index"></component>
+<!--    <Tab ref="addTab"/>-->
+    <component @close-tab="removeTab(index)" v-for="(item, index) in tabList" :is="item" :key="index" ref="addTab"></component>
   </ul>
 </template>
 
@@ -25,6 +25,10 @@ export default {
     addTab () {
       this.tabList.push(this.tab)
       this.counter++
+    },
+    removeTab (index) {
+      console.log(index)
+      this.tabList.splice(index, 1)
     },
     init (initData) {
       for (let i = 0; i < initData.notepad.length; i++) {

@@ -1,6 +1,6 @@
 <template>
   <li class="tab-main" ref="tab">
-    <button v-bind='this.name' class="tab-button"></button>
+    <button class="tab-button">{{this.name + this.index}}</button>
     <button @click='closeTab' class="close-button">x</button>
   </li>
 </template>
@@ -10,9 +10,9 @@ export default {
   name: 'Tab',
   data () {
     return {
-      name: null,
-      memo: null,
-      index: ''
+      index: Number(new Date() % 10000),
+      name: `Tab`,
+      memo: null
     }
   },
   methods: {
@@ -37,7 +37,7 @@ export default {
     },
     closeTab () {
       console.log(this.index)
-      this.$emit('close-tab', this.index)
+      this.$emit('close-tab')
     }
   }
 }
