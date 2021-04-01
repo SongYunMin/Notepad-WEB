@@ -1,5 +1,5 @@
 <template>
-  <article class="editor-main" ref="showTab">
+  <article class="editor-main" ref="showTab render">
     <label>
       <input type="text" class="name" placeholder="제목을 입력하세요"/>
       <textarea class="memo" placeholder="메모를 입력하세요"></textarea>

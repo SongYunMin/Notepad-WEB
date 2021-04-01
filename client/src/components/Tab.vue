@@ -1,7 +1,8 @@
 <template>
-  <li class="tab-main" ref="tab">
+  <li class="tab-main">
     <button @click='showTab' class="tab-button">{{this.name}}</button>
-    <button @click='closeTab' class="close-button">x</button>
+    <button @click='closeTab'
+            class="close-button">x</button>
   </li>
 </template>
 
@@ -11,7 +12,7 @@ export default {
   data () {
     return {
       index: Number(new Date() % 10000),
-      name: `Tab`,
+      name: 'Tab',
       memo: null
     }
   },
@@ -24,6 +25,7 @@ export default {
       this.memo = newMemo
     },
     getInfo () {
+      console.log(this.name, this.memo)
       return {
         name: this.name,
         memo: this.memo
@@ -36,7 +38,6 @@ export default {
       this.$emit('count-check')
     },
     closeTab () {
-      console.log(this.index)
       this.$emit('close-tab')
     },
     showTab () {

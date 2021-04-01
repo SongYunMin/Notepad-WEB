@@ -6,14 +6,13 @@
                v-for="(item, index) in tabList"
                :is="item"
                :key="index"
-               ref="addTab">
+               ref="tab">
     </component>
   </ul>
 </template>
 
 <script>
 import Tab from '@/components/Tab'
-
 export default {
   name: 'Tabs',
   data () {
@@ -29,8 +28,11 @@ export default {
   },
   methods: {
     addTab () {
-      this.tabList.push(this.tab)
+      this.tabList.push({name: 'asd', memo: 'zxc'})
+      console.log(this.$refs.tab)
+      this.select(this.tab)
       this.counter++
+      return this.tab
     },
     removeTab (index) {
       console.log(index)
@@ -47,10 +49,20 @@ export default {
       this.select(this.tabList[initData.activeIndex])
     },
     select (tab) {
+      console.log('Select : ', tab)
       this.selectedTab = tab
     },
     getIndex () {
       return this.counter
+    },
+    save (data) {
+      for (let i = 0; i < this.tabList.length; i++) {
+        console.log(this.tabList[i].getIndex(), '::', this.selectedTab.getIndex())
+        if (this.tabList[i].getIndex() === this.selectedTab.getIndex()) {
+          this.selectedTab.setName(data.name)
+          this.selectedTab.setMemo(data.memo)
+        }
+      }
     }
   }
 }

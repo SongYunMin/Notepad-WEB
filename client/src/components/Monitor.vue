@@ -1,8 +1,8 @@
 <template>
   <section id='monitor' class="monitor-main">
     <Header @load-tab="loadTab" @add-tab="addTab"/>
-    <Tabs @show-tab='showTab' ref="addTab"/>
-    <Editor/>
+    <Tabs @show-tab='showTab' ref="tabs"/>
+    <Editor ref="editor"/>
   </section>
 </template>
 
@@ -50,7 +50,10 @@ export default {
       }
     },
     addTab () {
-      this.$refs.addTab.addTab()
+      // TODO : 새로운 탭 받아와서 에디터에 뿌려야 함
+      this.$refs.tabs.addTab()
+      // console.log(newTab.methods.getInfo())
+      // this.$refs.editor.render(newTab.getInfo())
     },
     loadTab (data) {
 
