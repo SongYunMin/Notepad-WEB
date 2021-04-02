@@ -35,13 +35,6 @@ export default {
     showTab (index) {
       this.$emit('show-tab', index)
     },
-    init (initData) {
-      for (let i = 0; i < initData.notepad.length; i++) {
-        this.list[initData.notepad[i].index].setName(initData.notepad[i].name)
-        this.list[initData.notepad[i].index].setMemo(initData.notepad[i].memo)
-      }
-      this.select(this.list[initData.activeIndex])
-    },
     select (tab) {
       console.log('Select : ', tab)
       this.selectedTab = tab

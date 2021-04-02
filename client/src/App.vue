@@ -2,7 +2,7 @@
   <div id="app">
     <Login @sign-up="changeComponent(1)" @sign-in="changeComponent(2)" v-if="this.check === 0"/>
     <NewAccount @back="changeComponent(0)" v-else-if="this.check === 1"/>
-    <Monitor v-else-if="this.check === 2"/>
+    <Monitor @back="changeComponent" v-else-if="this.check === 2"/>
   </div>
 </template>
 

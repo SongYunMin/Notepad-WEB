@@ -61,7 +61,7 @@ router.get('/logout', (req, res) => {
                 if (err) {
                     return res.send(err);
                 }
-                return res.send("OK");
+                return res.send('OK');
             }
         )
     }

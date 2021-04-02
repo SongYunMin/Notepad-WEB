@@ -43,11 +43,11 @@ router.get('/check', async (req, res) => {
 
 router.post('/save', async (req, res) => {
     if (req.body.name.indexOf('../') !== -1) {
-        return res.send("Unable to access.");
+        return res.send('Unable to access.');
     }
 
     if (!req.session.user) {
-        return res.send("False");
+        return res.send('False');
     }
 
     const USER_SESSION_DATA = {
@@ -92,13 +92,13 @@ router.post('/save', async (req, res) => {
         throw err;
     });
 
-    res.send('OK');
-    return 1;
+    return res.send('OK');
+
 });
 
 router.get('/load', async (req, res) => {
     if (!req.session.user) {
-        return res.send("False");
+        return res.send('False');
 
     }
     try {
