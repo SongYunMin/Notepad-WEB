@@ -125,7 +125,7 @@ router.get('/delete', (req, res) => {
         active: 0
     }, {where:{user_id:req.session.user.id}});
 
-    res.send({result : 'OK'});
+    return res.send({result : 'OK'});
 });
 
 module.exports = router;

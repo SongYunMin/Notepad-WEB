@@ -67,7 +67,7 @@ export default {
       this.saveTitle = this.currentPage.name
     },
     loadTab (data) {
-      console.log(data)
+      this.list.push({name: data.name, memo: data.memo, index: this.count++})
     },
     showTab (index) {
       this.currentShowPage = index
