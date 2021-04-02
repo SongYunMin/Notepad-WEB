@@ -1,8 +1,8 @@
 <template>
   <li class="tab-main">
-    <button @click='showTab' class="tab-button">{{this.name}}</button>
+    <input v-model='this.name' type="button" @click='showTab' class="tab-button"/>
     <button @click='closeTab'
-            class="close-button">{{ tabIndex }}</button>
+            class="close-button">X</button>
   </li>
 </template>
 
@@ -11,37 +11,30 @@ export default {
   name: 'Tab',
   data () {
     return {
-      index: Number(new Date() % 10000),
       name: 'Tab',
+      index: Number(new Date() % 10000),
       memo: null
     }
   },
   props: {
-    tabIndex: Number
+    tabIndex: Number,
+    saveTitle: String,
+    // TODO : 전체 Node 변경 됨
+    current: Object
   },
   methods: {
-    setName (newName) {
-      this.name = newName
+    setName () {
+      // this.name = this.saveTitle
       // TODO : V-bind, model 등으로 DOM 요소 바인딩 하면 됨
     },
     setMemo (newMemo) {
       this.memo = newMemo
     },
-    getInfo () {
-      console.log(this.name, this.memo)
-      return {
-        name: this.name,
-        memo: this.memo
-      }
-    },
     getIndex () {
       return this.index
     },
-    getCount () {
-      this.$emit('count-check')
-    },
     closeTab () {
-      this.$emit('close-tab')
+      this.$emit('remove-tab', this.tabIndex)
     },
     showTab () {
       this.$emit('show-tab', this.tabIndex)

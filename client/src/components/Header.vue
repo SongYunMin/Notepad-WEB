@@ -1,7 +1,7 @@
 <template>
   <section class="main-header">
     <button @click="loadEvent" class="load" type="button">불러오기</button>
-    <button class="save" type="button">저장하기</button>
+    <button @click="saveTab" class="save" type="button">저장하기</button>
     <button @click="addTab" class="addTabBT" type="button">탭 추가</button>
     <button class="logout" type="button">로그아웃</button>
   </section>
@@ -16,6 +16,9 @@ export default {
   methods: {
     addTab () {
       this.$emit('add-tab')
+    },
+    saveTab () {
+      this.$emit('save-tab')
     },
     async loadEvent () {
       const search = prompt('불러올 메모의 제목을 입력하세요.')

@@ -8,8 +8,7 @@ router.get('/check', async (req, res) => {
         console.log("Session...OK");
     } else {                      // 세션이 없는데 Notepad 접근 시
         console.log(req.session.user);
-        res.send('False');
-        return 'False';
+        return res.send('False');
     }
 
     const initUserSessionResult = await db.User_SESSION.findOne({
@@ -22,8 +21,7 @@ router.get('/check', async (req, res) => {
 
 
     if(initUserSessionResult === null || initNotepadResult === null){
-        res.send({DATA : "DATA_NOT_FOUND"});
-        return -1;
+        return res.send({DATA : "DATA_NOT_FOUND"});
     }
 
     let initData = {
@@ -45,13 +43,11 @@ router.get('/check', async (req, res) => {
 
 router.post('/save-notepad_SQL.sql', async (req, res) => {
     if (req.body.name.indexOf('../') !== -1) {
-        res.send("Unable to access.");
-        return -1;
+        return res.send("Unable to access.");
     }
 
     if (!req.session.user) {
-        res.send("False");
-        return -1;
+        return res.send("False");
     }
 
     const USER_SESSION_DATA = {
@@ -102,8 +98,8 @@ router.post('/save-notepad_SQL.sql', async (req, res) => {
 
 router.get('/load', async (req, res) => {
     if (!req.session.user) {
-        res.send("False");
-        return -1;
+        return res.send("False");
+
     }
     const loadNotepadResult = await db.Notepad.findOne({
         where: {name: req.query.name}

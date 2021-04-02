@@ -1,8 +1,8 @@
 <template>
-  <article class="editor-main" ref="showTab render">
+  <article class="editor-main">
     <label>
-      <input type="text" class="name" placeholder="제목을 입력하세요"/>
-      <textarea class="memo" placeholder="메모를 입력하세요"></textarea>
+      <input @change='changeTitle' v-model="current.name" type="text" class="name" placeholder="제목을 입력하세요"/>
+      <textarea v-model="current.memo" class="memo" placeholder="메모를 입력하세요"></textarea>
     </label>
   </article>
 </template>
@@ -17,23 +17,18 @@ export default {
       dom: document.querySelector('.editor-main')
     }
   },
+  props: {
+    current: Object
+  },
   methods: {
+    changeTitle () {
+      this.$emit('change-title')
+    },
     hide () {
       this.dom.classList.remove('show')
     },
     show () {
       this.dom.classList.add('show')
-    },
-    render ({name, memo}) {
-      this.show()
-      this.name = name
-      this.memo = memo
-    },
-    saveData () {
-      return {
-        name: this.name,
-        memo: this.memo
-      }
     }
   }
 }

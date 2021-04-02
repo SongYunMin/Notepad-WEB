@@ -11,12 +11,11 @@ router.get('/idCheck', async (req, res) => {
     try {
         const result = await db.User.findAll({attributes: ['ID']});
         for (const node of result) {
-            console.log(node.ID, ":::" , req.query.id);
             if (node.ID === req.query.id) {
-                res.send('False');
+               return res.send('False');
             }
         }
-        res.send('OK');
+        return res.send('OK');
     } catch (err) {
         throw err;
     }
@@ -36,8 +35,7 @@ router.post('/newAccount', async (req, res) => {
             throw err
         });
     }
-    res.send('OK');
-    return -1;
+    return res.send('OK');
 });
 
 router.post('/login', async (req, res) => {
@@ -54,22 +52,19 @@ router.post('/login', async (req, res) => {
                 }
                 console.log(req.session.user);
              }
-            res.send(node.nickname.toString());
-            return 1;
+            return res.send(node.nickname.toString());
         }
     }
-    // // TODO : ERR_HTTP_HEADERS_SENT ERROR
-    // res.send('False');
+    return res.send('False');
 });
 
 router.get('/logout', (req, res) => {
     if (req.session.user) {
         req.session.destroy(err => {
                 if (err) {
-                    return -1;
+                    return res.send(err);
                 }
-                res.send("OK");
-                return 1;
+                return res.send("OK");
             }
         )
     }

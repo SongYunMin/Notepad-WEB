@@ -1,8 +1,8 @@
 <template>
   <section id='monitor' class="monitor-main">
-    <Header @load-tab="loadTab" @add-tab="addTab"/>
-    <Tabs @show-tab='showTab' :list="list"/>
-    <Editor ref="editor"/>
+    <Header @load-tab="loadTab" @add-tab="addTab" @save-tab="saveTab"/>
+    <Tabs @show-tab='showTab' @remove-tab="removeTab" :list="list" :saveTitle="saveTitle" :current="currentPage"/>
+    <Editor v-if='this.count > 0' :current="currentPage"/>
   </section>
 </template>
 
@@ -18,13 +18,23 @@ export default {
       initData: this.checkSessionRequest(),
       tabs: Tabs,
       list: [],
-      currentShowPage: 0
+      count: 0,
+      currentShowPage: 0,
+      saveTitle: 'Tab'
     }
   },
   components: {
     Header,
     Tabs,
     Editor
+  },
+  computed: {
+    currentPage () {
+    // TODO : 리스트는 0개인데 현재 페이지도 0이면 오류 (예외처리)
+      if (this.count > 0) {
+        return this.list[this.currentShowPage]
+      }
+    }
   },
   methods: {
     async checkSessionRequest () {
@@ -52,17 +62,19 @@ export default {
       }
     },
     addTab () {
-      // TODO : 새로운 탭 받아와서 에디터에 뿌려야 함
-      this.list.push({name: 'sd', memo: 'asd'})
-      // this.$refs.tabs.addTab()
-      // console.log(newTab.methods.getInfo())
-      // this.$refs.editor.render(newTab.getInfo())
+      this.list.push({name: '', memo: '', index: this.count++})
+    },
+    saveTab () {
+      this.saveTitle = this.currentPage.name
     },
     loadTab (data) {
 
     },
     showTab (index) {
       this.currentShowPage = index
+    },
+    removeTab (index) {
+      this.list.splice(index, 1)
     }
   }
 }
