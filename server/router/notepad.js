@@ -41,7 +41,7 @@ router.get('/check', async (req, res) => {
     // return 1;
 });
 
-router.post('/save-notepad_SQL.sql', async (req, res) => {
+router.post('/save', async (req, res) => {
     if (req.body.name.indexOf('../') !== -1) {
         return res.send("Unable to access.");
     }
@@ -101,14 +101,17 @@ router.get('/load', async (req, res) => {
         return res.send("False");
 
     }
-    const loadNotepadResult = await db.Notepad.findOne({
-        where: {name: req.query.name}
-    });
-
-    res.send({
-        name: loadNotepadResult.name,
-        memo: loadNotepadResult.memo
-    });
+    try {
+        const loadNotepadResult = await db.Notepad.findOne({
+            where: {name: req.query.name}
+        });
+        return res.send({
+            name: loadNotepadResult.name,
+            memo: loadNotepadResult.memo
+        });
+    } catch(err) {
+      return res.send({name:'False'});
+    }
 });
 
 router.get('/delete', (req, res) => {

@@ -23,13 +23,6 @@ export default {
     current: Object
   },
   methods: {
-    setName () {
-      // this.name = this.saveTitle
-      // TODO : V-bind, model 등으로 DOM 요소 바인딩 하면 됨
-    },
-    setMemo (newMemo) {
-      this.memo = newMemo
-    },
     getIndex () {
       return this.index
     },

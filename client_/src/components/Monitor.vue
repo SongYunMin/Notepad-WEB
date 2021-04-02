@@ -61,7 +61,6 @@ export default {
       }
     },
     loadTab(data) {
-      // TODO : Vuex 및 mapGetter 활용 https://madplay.github.io/post/why-do-we-need-vuex
       console.log(data.name);
       console.log(data.memo);
     },

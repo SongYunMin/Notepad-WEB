@@ -8,11 +8,8 @@
 </template>
 
 <script>
-// TODO : 객체 지향 버전의 멤버 변수를 현재의 Data로 두면 될
 export default {
   name: 'Header',
-  components: {
-  },
   methods: {
     addTab () {
       this.$emit('add-tab')
@@ -28,6 +25,7 @@ export default {
       })
       if (response.status === 200) {
         const result = await response.json()
+        if (result.name === 'False') return alert('저장된 메모가 없습니다.')
         this.$emit('load-tab', {
           name: result.name,
           memo: result.memo

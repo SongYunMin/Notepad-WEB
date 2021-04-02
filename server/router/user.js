@@ -4,8 +4,6 @@ const db = require('../models');
 const promisify = require('util').promisify;
 const router = express.Router();
 
-// const doAsync = fn => async (req, res, next) => await fn(req, res, next).catch(next);
-
 router.get('/idCheck', async (req, res) => {
     try {
         const result = await db.User.findAll({attributes: ['ID']});

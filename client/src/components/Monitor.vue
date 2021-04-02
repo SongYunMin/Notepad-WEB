@@ -30,7 +30,6 @@ export default {
   },
   computed: {
     currentPage () {
-    // TODO : 리스트는 0개인데 현재 페이지도 0이면 오류 (예외처리)
       if (this.count > 0) {
         return this.list[this.currentShowPage]
       }
@@ -68,7 +67,7 @@ export default {
       this.saveTitle = this.currentPage.name
     },
     loadTab (data) {
-
+      console.log(data)
     },
     showTab (index) {
       this.currentShowPage = index

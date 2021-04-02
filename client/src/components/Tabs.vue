@@ -5,26 +5,22 @@
          v-for="(item, index) of list"
          :tabIndex="index"
          :key="index"
-         :current="current"
-    >
+         :current="current">
     </Tab>
   </ul>
 </template>
 
 <script>
 import Tab from '@/components/Tab'
-
 export default {
   name: 'Tabs',
   data () {
     return {
-      // tabList: [],
       counter: 0,
       selectedTab: null,
       tab: Tab
     }
   },
-  // TODO : 탭의 인덱스 체크 필요
   components: {
     Tab
   },
