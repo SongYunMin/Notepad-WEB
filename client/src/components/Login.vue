@@ -38,6 +38,10 @@ export default {
       this.$emit('sign-up')
     },
     async signIn (ID, PW) {
+      this.$emit('sign-in')
+      if (ID) {
+        return
+      }
       const response = await fetch('http://localhost:3000/user/login', {
         method: 'POST',
         mode: 'cors',
