@@ -61,7 +61,6 @@ export default {
     initialize () {
       const init = JSON.parse(this.initData)
       if (init.DATA === 'DATA_NOT_FOUND') {
-        console.log('DATA_NOT_FOUND')
       } else {
         for (let i = 0; i < init.count; i++) {
           this.addTab()
@@ -96,19 +95,35 @@ export default {
           this.back(0)
         }
       }
-      // TODO : 저장시 탭 이름 변경하기
-      // this.saveTitle = this.currentPage.name
+      this.saveTitle = this.currentPage.name
     },
     loadTab (data) {
       this.list.push({name: data.name, memo: data.memo, index: this.count++})
     },
     showTab (index) {
       this.currentShowPage = index
-      console.log(this.currentPage.index)
     },
-    removeTab (index) {
-      // TODO : 삭제 API 요청 추가
-      this.list.splice(index, 1)
+    async removeTab (index, notepadName) {
+      const data = {
+        count: --this.count,
+        name: notepadName,
+        index: index
+      }
+      const response = await fetch(`http://localhost:3000/notepad/delete?data=${JSON.stringify(data)}`, {
+        mode: 'cors',
+        credentials: 'include',
+        method: 'GET',
+        headers: {'Content-Type': 'application/json'}
+      })
+      if (response.status === 200) {
+        const result = await response.json()
+        if (result.result === 'OK') {
+          this.list.splice(index, 1)
+          return alert('삭제 완료')
+        } else {
+          return alert('삭제 오류!')
+        }
+      }
     },
     back (number) {
       this.$emit('back', number)

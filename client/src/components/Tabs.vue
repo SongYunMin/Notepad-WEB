@@ -3,6 +3,7 @@
     <Tab @show-tab='showTab'
          @remove-tab="removeTab"
          v-for="(item, index) of list"
+         :item="item"
          :tabIndex="index"
          :key="index"
          :current="current">
@@ -29,14 +30,13 @@ export default {
     current: Object
   },
   methods: {
-    removeTab (index) {
-      this.$emit('remove-tab', index)
+    removeTab (index, notepadName) {
+      this.$emit('remove-tab', index, notepadName)
     },
     showTab (index) {
       this.$emit('show-tab', index)
     },
     select (tab) {
-      console.log('Select : ', tab)
       this.selectedTab = tab
     },
     getIndex () {

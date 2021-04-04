@@ -37,8 +37,7 @@ router.get('/check', async (req, res) => {
             index: node.tab
         });
     }
-    res.send(initData);
-    // return 1;
+    return res.send(initData);
 });
 
 // TODO : 노트페드 INSERT가 아니라 업데이트 되어야 함
@@ -84,6 +83,7 @@ router.post('/save', async (req, res) => {
         tab: req.body.activeIndex
     }
 
+    // TODO : DATA UPDATE
     db.Notepad.create({
         user_id: NOTEPAD_DATA.user_id,
         name: NOTEPAD_DATA.name,

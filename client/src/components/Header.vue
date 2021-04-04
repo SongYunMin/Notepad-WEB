@@ -18,14 +18,14 @@ export default {
       this.$emit('save-tab')
     },
     async loadEvent () {
-      const search = prompt('불러올 메모의 제목을 입력하세요.')
+      const search = prompt('불러올 메모의 제목을 입력하세요')
       const response = await fetch(`http://localhost:3000/notepad/load?name=${search}`, {
         mode: 'cors',
         credentials: 'include'
       })
       if (response.status === 200) {
         const result = await response.json()
-        if (result.name === 'False') return alert('저장된 메모가 없습니다.')
+        if (result.name === 'False') return alert('저장된 메모가 없습니다')
         this.$emit('load-tab', {
           name: result.name,
           memo: result.memo
@@ -40,10 +40,10 @@ export default {
       if (response.status === 200) {
         const result = await response.text()
         if (result === 'OK') {
-          alert('로그아웃 되었습니다.')
+          alert('로그아웃 되었습니다')
           this.$emit('back', 0)
         } else {
-          alert('Error!')
+          return alert('Error!')
         }
       }
     }
