@@ -41,6 +41,7 @@ router.get('/check', async (req, res) => {
     // return 1;
 });
 
+// TODO : 노트페드 INSERT가 아니라 업데이트 되어야 함
 router.post('/save', async (req, res) => {
     if (req.body.name.indexOf('../') !== -1) {
         return res.send('Unable to access.');
@@ -116,8 +117,9 @@ router.get('/load', async (req, res) => {
 
 router.get('/delete', (req, res) => {
     const newData = JSON.parse(req.query.data);
+    console.log(newData);
     db.Notepad.destroy({
-        where: {name: newData.notepad.name}
+        where: {name: newData.name}
     })
 
     db.User_SESSION.update({
