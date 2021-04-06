@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import Header from './Header'
-import Tabs from './Tabs'
-import Editor from './Editor'
+import Header from './Header.vue'
+import Tabs from './Tabs.vue'
+import Editor from './Editor.vue'
 
 export default {
   name: 'Monitor',

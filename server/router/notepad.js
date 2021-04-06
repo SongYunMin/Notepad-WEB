@@ -3,7 +3,6 @@ const router = express.Router();
 const db = require('../models');
 
 router.get('/check', async (req, res) => {
-    console.log("세션", req.session);
     if (req.session.user) {       // 사용자 데이터(Session)가 있다면
         console.log("Session...OK");
     } else {                      // 세션이 없는데 Notepad 접근 시
@@ -40,7 +39,6 @@ router.get('/check', async (req, res) => {
     return res.send(initData);
 });
 
-// TODO : 노트페드 INSERT가 아니라 업데이트 되어야 함
 router.post('/save', async (req, res) => {
     if (req.body.name.indexOf('../') !== -1) {
         return res.send('Unable to access.');
@@ -117,7 +115,6 @@ router.get('/load', async (req, res) => {
 
 router.get('/delete', (req, res) => {
     const newData = JSON.parse(req.query.data);
-    console.log(newData);
     db.Notepad.destroy({
         where: {name: newData.name}
     })
