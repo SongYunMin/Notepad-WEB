@@ -11,8 +11,8 @@ module.exports = {
     devtool: '#source-map',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: './index.js',
-        publicPath: '',
+        filename: '[name].js',
+        publicPath: '/',
     },
     devServer: {
         open       : true,
@@ -33,6 +33,9 @@ module.exports = {
     optimization: {},
     resolve: {
         modules: ['node_modules'],
+        alias: {
+            'vue$': 'vue/dist/vue.esm.js'
+        },
         extensions: ['.js', '.json', '.jsx', '.css'],
     },
 };

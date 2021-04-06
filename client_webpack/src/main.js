@@ -11,3 +11,7 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+
+moedule.export = {
+  runtimeCompiler: true
+}

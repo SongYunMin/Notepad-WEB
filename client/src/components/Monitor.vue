@@ -51,6 +51,7 @@ export default {
         const result = await response.text()
         if (result === 'False') {
           alert('비정상 접근입니다. 다시 로그인 해주세요.')
+          debugger
           location.href = 'Login.html'
         } else {
           this.initData = result
