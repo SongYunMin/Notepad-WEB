@@ -1,7 +1,6 @@
 const path = require('path')
 const VueLoader = require('vue-loader/lib/plugin')
 const HtmlWebpack = require('html-webpack-plugin')
-const { webpack } = require('webpack')
 
 module.exports = {
     mode: 'development',
@@ -10,12 +9,11 @@ module.exports = {
     },
     devtool: '#source-map',
     output: {
-        path: path.resolve(__dirname, 'dist'),
         filename: '[name].js',
-        publicPath: '/',
+        path: path.resolve(__dirname + 'dist')
     },
     devServer: {
-        open       : true,
+        // open       : true,
         hot        : true,
         contentBase: './dist'
     },
@@ -36,6 +34,6 @@ module.exports = {
         alias: {
             'vue$': 'vue/dist/vue.esm.js'
         },
-        extensions: ['.js', '.json', '.jsx', '.css'],
+        extensions: ['.js', '.json', '.jsx', '.css', '.vue'],
     },
 };

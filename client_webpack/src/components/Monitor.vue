@@ -60,6 +60,7 @@ export default {
     },
     initialize () {
       const init = JSON.parse(this.initData)
+      console.log(init)
       if (init.DATA === 'DATA_NOT_FOUND') {
       } else {
         for (let i = 0; i < init.count; i++) {

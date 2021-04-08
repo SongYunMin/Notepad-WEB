@@ -73,7 +73,7 @@ export default {
       }
     },
     addTab () {
-      this.list.push({name: '', memo: '', index: this.count++})
+      this.list.push({name: '빈 탭', memo: '', index: this.count++})
     },
     async saveTab () {
       const data = {

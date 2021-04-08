@@ -1,7 +1,7 @@
 <template>
   <div id="header">
     <header class="title" id="title">
-      <p>Notepad Service Login</p>
+      <p>Notepad wqewqewqeService Login</p>
     </header>
     <article class="login">
       <ul class="loginBox">

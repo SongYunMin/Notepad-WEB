@@ -113,11 +113,19 @@ router.get('/load', async (req, res) => {
     }
 });
 
-router.get('/delete', (req, res) => {
+// TODO : 삭제한 후에 남아있는 메모 Index 값 불일치
+// TODO : 삭제할 Note Index 저장한 뒤에 그것보다 큰 Index 가진 Notepad -1
+router.get('/delete', async (req, res) => {
     const newData = JSON.parse(req.query.data);
+    const deleteNotepadResult = await db.Notepad.findOne({
+        where: {name: newData.name}
+    })
+    console.log(deleteNotepadResult.tab)
     db.Notepad.destroy({
         where: {name: newData.name}
     })
+
+
 
     db.User_SESSION.update({
         count: newData.count,
