@@ -1,48 +1,13 @@
-const express = require('express');
-const app = express();
-const cors = require('cors');
-const initRouter = require('./router/init');
-const userRouter = require('./router/user');
-const notepadRouter = require('./router/notepad');
-const {graphqlHTTP} = require('express-graphql');
-const graphql = require('graphql');
-
-const schema = graphql.buildSchema(`
-  # 데이터 구조 정의 (스키마)
-  type User {
-    id: String
-    name: String
-  }
-  
-  # 쿼리에 사용할 메소드를 정의
-  type Query {
-    users: [User]
-  }
-`);
-// 데이터 자체를 정의 함
-const users = [
-    {
-        id: '1',
-        name: 'Elizabeth Bennet'
-    },
-    {
-        id: '2',
-        name: 'Fitzwilliam Darcy'
-    }
-];
-const rootValue = {
-    Query: {
-        users: (parent, args, context, info) => users.find(user => user.id === args.id)
-    }
-}
-app.use('/graphql', graphqlHTTP({
-    schema,
-    rootValue,
-    graphql: true
-}))
-
-const { sequelize } = require('./models');
-sequelize.sync();
+const {ApolloServer} = require('apollo-server')
+const cors = require('cors')
+const express = require('express')
+const app = express()
+const queries = require('./typedefs-resolvers/_queries')
+const mutations = require('./typedefs-resolvers/_mutations')
+const users = require('./typedefs-resolvers/users')
+const user_sessions = require('./typedefs-resolvers/user_sessions')
+const notepads = require('./typedefs-resolvers/notepads')
+const {sequelize} = require('./models')
 
 const session = require('express-session');
 app.use(cors({
@@ -58,17 +23,22 @@ app.use(session({
     cookie: {maxAge: 60000}
 }));
 
-app.use(express.json());
-app.use(express.static('./public'));
-app.use('/init', initRouter);
-app.use('/user', userRouter);
-app.use('/notepad', notepadRouter);
+const typeDefs = [
+    queries,
+    mutations,
+    users.typeDefs,
+    user_sessions.typeDefs,
+    notepads.typeDefs
+]
 
-app.get('/', (req, res) => {
-    res.redirect('/init');
-});
+const resolvers = [
+    users.resolvers,
+    user_sessions.resolvers,
+    notepads.resolvers
+]
 
-app.listen(3000, () => {
-    console.log('Server started!');
-});
+const server = new ApolloServer({typeDefs, resolvers})
 
+server.listen().then(({url}) => {
+    console.log(`Server ready ay ${url}`)
+})
