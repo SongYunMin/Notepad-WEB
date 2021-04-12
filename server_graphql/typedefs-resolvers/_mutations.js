@@ -2,7 +2,9 @@ const {gql} = require('apollo-server')
 
 const typeDefs = gql`
     type Mutation {
-        test_mutation(id: Int): User
+        newAccount(input: PostNewAccount): String!
+        login(id: String, pw: String): String!
+        logout: String
     }
 `
 
