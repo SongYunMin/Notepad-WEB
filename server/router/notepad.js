@@ -18,7 +18,6 @@ router.get('/check', async (req, res) => {
         where: {user_id: req.session.user.id}
     })
 
-
     if(initUserSessionResult === null || initNotepadResult === null){
         return res.send({DATA : "DATA_NOT_FOUND"});
     }
@@ -92,7 +91,6 @@ router.post('/save', async (req, res) => {
     });
 
     return res.send('OK');
-
 });
 
 router.get('/load', async (req, res) => {
@@ -113,8 +111,6 @@ router.get('/load', async (req, res) => {
     }
 });
 
-// TODO : 삭제한 후에 남아있는 메모 Index 값 불일치
-// TODO : 삭제할 Note Index 저장한 뒤에 그것보다 큰 Index 가진 Notepad -1
 router.get('/delete', async (req, res) => {
     const newData = JSON.parse(req.query.data);
     const deleteNotepadResult = await db.Notepad.findOne({

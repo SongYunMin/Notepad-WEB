@@ -49,6 +49,6 @@ server.applyMiddleware({
     app
 })
 
-app.listen(4000, () => {
+app.listen(3000, () => {
     console.log("server start!");
 })

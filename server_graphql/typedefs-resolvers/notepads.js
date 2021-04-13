@@ -53,7 +53,60 @@ const resolvers = {
         }
     },
     Mutation: {
+        saveNotepad: async (parent, args, context, info) => {
+            if (args.name.indexOf('../') !== -1) {
+                return res.send('Unable to access.');
+            }
 
+            if (!context.session.user) {
+                return res.send('False');
+            }
+
+            const USER_SESSION_DATA = {
+                user_id: context.session.user.id,
+                count: args.count,
+                active: args.activeIndex
+            }
+
+            const userSessionResult = await db.User_SESSION.findOne({where: {user_id: req.session.user.id}});
+            if (userSessionResult === null) {
+                db.User_SESSION.create({
+                    user_id: USER_SESSION_DATA.user_id,
+                    count: USER_SESSION_DATA.count,
+                    active: USER_SESSION_DATA.active
+                }).catch(err => {
+                    throw err;
+                });
+            } else {
+                db.User_SESSION.update({
+                        user_id: USER_SESSION_DATA.user_id,
+                        count: USER_SESSION_DATA.count,
+                        active: USER_SESSION_DATA.active
+                    }, {where: {user_id: USER_SESSION_DATA.user_id}}
+                ).catch(err => {
+                    throw err;
+                })
+            }
+
+            const NOTEPAD_DATA = {
+                user_id: context.session.user.id,
+                name: args.name,
+                memo: args.memo,
+                tab: args.activeIndex
+            }
+
+            // TODO : DATA UPDATE
+            db.Notepad.create({
+                user_id: NOTEPAD_DATA.user_id,
+                name: NOTEPAD_DATA.name,
+                memo: NOTEPAD_DATA.memo,
+                tab: NOTEPAD_DATA.tab
+            }).catch(err => {
+                throw err;
+            });
+
+            return 'OK';
+        }
     }
 }
 
