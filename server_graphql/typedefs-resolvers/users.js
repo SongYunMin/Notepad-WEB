@@ -2,7 +2,7 @@ const {gql} = require('apollo-server')
 const db = require('../models')
 const promisify = require('util').promisify;
 const crypto = require('crypto');
-
+const request = require('express')
 const typeDefs = gql`
     type User {
         ID: String!
@@ -15,12 +15,12 @@ const typeDefs = gql`
         count: Int!
         active: Int!
     }
-    input PostNewAccount {
-        ID: String!
-        pw: String!
-        nickname: String!
-        salt: String!
-    }
+    #    input PostNewAccount {
+    #        ID: String!
+    #        pw: String!
+    #        nickname: String!
+    #        salt: String!
+    #    }
 `
 
 const resolvers = {
@@ -41,16 +41,16 @@ const resolvers = {
         }
     },
     Mutation: {
-        newAccount: async (parent, args) =>{
-            console.log(args);
+        newAccount: async (parent, args) => {
+            console.log("받아온 인자 : ", args);
             const salt = await crypto.randomBytes(64).toString('base64');
             const scryptPromise = await promisify(crypto.scrypt);
-            const key = await scryptPromise(args.input.pw, salt, 64);
+            const key = await scryptPromise(args.pw, salt, 64);
             if (key) {
                 db.User.create({
-                    ID: args.input.ID,
-                    password: key.toString('base64'),
-                    nickname: args.input.nickname,
+                    ID: args.ID,
+                    pw: key.toString('base64'),
+                    nickname: args.nickname,
                     salt: salt
                 }).catch(err => {
                     return err
@@ -64,25 +64,26 @@ const resolvers = {
             for (const node of result) {
                 const key = await scryptPromise(args.pw, node.salt, 64);
                 if (key && node.ID === args.id && node.password === key.toString('base64')) {
-                    if (!context.session.user) {
-                        context.session.user = {
-                            id: args.id,
-                            pw: key.toString('base64'),
-                            authorization: true
-                        }
-                        console.log(context.session.user);
+                    console.log(context.req.session)
+                    if (context.req.session.cookie.id === '') {
+                        context.req.session.cookie.id = args.id;
+                        context.req.session.cookie.pw = key.toString('base64');
                     }
+                    console.log("여기는 유저: ",context.req.session)
                     return node.nickname.toString();
                 }
             }
             return 'False';
         },
+        // TODO : Session False
         logout: (parent, args, context) => {
-            if (context.session.user) {
-                context.session.destroy(err => {
+            console.log('세션 : ', context.req.session)
+            if (context.req.session.cookie.id === '') {
+                context.req.session.destroy(err => {
                         if (err) {
                             return err;
                         }
+                        console.log("로그아웃 : ", context.req.session)
                         return 'OK';
                     }
                 )

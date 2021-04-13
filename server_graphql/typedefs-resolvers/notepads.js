@@ -14,20 +14,21 @@ const typeDefs = gql`
 const resolvers = {
     Query: {
         initCheck: async(parent, context) => {
-            if (context.session.user) {       // 사용자 데이터(Session)가 있다면
+            console.log("init::::", context.req.session)
+            if (context.req.session.user) {       // 사용자 데이터(Session)가 있다면
                 console.log("Session...OK");
             } else {                      // 세션이 없는데 Notepad 접근 시
-                console.log(context.session.user);
+                console.log(context.req.session.user);
                 return 'False';
             }
 
             const initUserSessionResult = await db.User_SESSION.findOne({
-                where: {user_id: context.session.user.id}
+                where: {user_id: context.req.session.user.id}
             });
             console.log(initUserSessionResult)
 
             const initNotepadResult = await db.Notepad.findAll({
-                where: {user_id: context.session.user.id}
+                where: {user_id: context.req.session.user.id}
             })
             console.log(initNotepadResult)
 

@@ -31,8 +31,14 @@ app.use(session({
     secret: 'secret',
     resave: false,
     saveUninitialized: true,
-    cookie: {maxAge: 60000}
+    cookie: {
+        id: '',
+        pw: '',
+        maxAge: 60000
+    },
+
 }));
+
 
 const server = new ApolloServer({
     cors: {
@@ -40,10 +46,15 @@ const server = new ApolloServer({
     },
     typeDefs,
     resolvers,
+    introspection: true,
     context: ({req}) =>{
-        return req
+        console.log("테스트 : ", req.request)
+        return {
+            req,
+        }
     }
 })
+
 
 server.applyMiddleware({
     app

@@ -15,6 +15,10 @@
 import Header from './Header.vue'
 import Tabs from './Tabs.vue'
 import Editor from './Editor.vue'
+import {gql, GraphQLClient} from 'graphql-request'
+
+const endpoint = "http://localhost:3000/graphql"
+const graphQLClient = new GraphQLClient(endpoint)
 
 export default {
   name: 'Monitor',
@@ -43,19 +47,30 @@ export default {
   },
   methods: {
     async checkSessionRequest () {
-      const response = await fetch('http://localhost:3000/notepad/check', {
-        mode: 'cors',
-        credentials: 'include'
-      })
-      if (response.status === 200) {
-        const result = await response.text()
-        if (result === 'False') {
-          alert('비정상 접근입니다. 다시 로그인 해주세요.')
-          location.href = 'Login.html'
-        } else {
-          this.initData = result
+      const query = gql`
+        query initCheck{
+            initCheck
         }
-      }
+      `
+
+      this.initData = await graphQLClient.request(query)
+      console.log(this.initData)
+      debugger
+
+
+      // const response = await fetch('http://localhost:3000/notepad/check', {
+      //   mode: 'cors',
+      //   credentials: 'include'
+      // })
+      // if (response.status === 200) {
+      //   const result = await response.text()
+      //   if (result === 'False') {
+      //     alert('비정상 접근입니다. 다시 로그인 해주세요.')
+      //     location.href = 'Login.html'
+      //   } else {
+      //     this.initData = result
+      //   }
+      // }
       this.initialize()
     },
     initialize () {

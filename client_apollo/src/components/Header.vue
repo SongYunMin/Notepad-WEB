@@ -8,6 +8,10 @@
 </template>
 
 <script>
+import {GraphQLClient, gql} from 'graphql-request'
+const endpoint = "http://localhost:3000/graphql"
+const graphQLClient = new GraphQLClient(endpoint)
+
 export default {
   name: 'Header',
   methods: {
@@ -33,6 +37,15 @@ export default {
       }
     },
     async logout () {
+      const mutation = gql`
+        mutation logout {
+            logout
+        }
+      `
+      const result = await graphQLClient.request(mutation)
+      console.log(result.logout)
+
+
       const response = await fetch('http://localhost:3000/user/logout', {
         mode: 'cors',
         credentials: 'include'

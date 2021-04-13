@@ -21,6 +21,7 @@ module.exports = {
         rules: [
             { test: /\.js$/, use: 'babel-loader' },
             { test: /\.vue$/, use: 'vue-loader' },
+            { test: /\.gql|graphql$/, use: 'graphql-tag/loader'},
             { test: /\.css$/, use: ['vue-style-loader', 'css-loader'] }
         ]
     },

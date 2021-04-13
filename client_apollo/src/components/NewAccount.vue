@@ -30,6 +30,10 @@
 </template>
 
 <script>
+import {GraphQLClient, gql} from 'graphql-request'
+const endpoint = "http://localhost:3000/graphql"
+const graphQLClient = new GraphQLClient(endpoint)
+
 export default {
   name: 'NewAccount',
   data () {
@@ -44,21 +48,21 @@ export default {
   },
   methods: {
     async idCheck (ID) {
-      const response = await fetch(`http://localhost:3000/user/idCheck?id=${ID}`, {
-        method: 'GET',
-        mode: 'cors',
-        credentials: 'include'
-      })
-      if (response.status === 200) {
-        const result = await response.text()
-        if (result === 'False') {
-          alert('이미 존재하는 아이디입니다.')
-          this.flag = 0
-        } else {
-          alert('사용할 수 있는 아이디입니다.')
-          this.temp = this.id
-          this.flag = 1
-        }
+      const query = gql`
+        query idCheck($ID: String){
+           idCheck(ID: $ID)
+        }`
+      const val = {
+        ID: ID
+      }
+      const result = await graphQLClient.request(query,val)
+      if (result.idCheck === 'False') {
+        alert('이미 존재하는 아이디입니다.')
+        this.flag = 0
+      } else {
+        alert('사용할 수 있는 아이디입니다.')
+        this.temp = this.id
+        this.flag = 1
       }
     },
     async submit () {
@@ -72,28 +76,25 @@ export default {
         return -1
       }
 
-      const response = await fetch(`http://localhost:3000/user/newAccount`, {
-        method: 'POST',
-        mode: 'cors',
-        credentials: 'include',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          id: this.id,
-          pw: this.pw,
-          nick: this.nick
-        })
-      })
-      if (response.status === 200) {
-        const result = await response.text()
-        if (result === 'OK') {
-          alert('회원 가입에 성공하였습니다.')
-          this.$emit('back')
-          return 1
-        } else {
-          alert('회원가입 실패')
-          this.$emit('back')
-          return -1
-        }
+      const mutation = gql`
+        mutation newAccount($ID: String, $pw: String, $nickname: String){
+            newAccount(ID: $ID, pw: $pw, nickname: $nickname)
+        }`
+       let val = {
+        ID: this.id,
+        pw: this.pw,
+        nickname: this.nick,
+      }
+      console.log(val)
+      const result = await graphQLClient.request(mutation,val)
+      if (result.newAccount === 'OK') {
+        alert('회원 가입에 성공하였습니다.')
+        this.$emit('back')
+        return 1
+      } else {
+        alert('회원가입 실패')
+        this.$emit('back')
+        return -1
       }
     },
     back () {

@@ -10,13 +10,9 @@
 import Login from './components/Login.vue'
 import NewAccount from './components/NewAccount.vue'
 import Monitor from './components/Monitor.vue'
-import {ApolloConsumer, ApolloProvider} from '@apollo/client';
-import { ApolloClient, InMemoryCache } from '@apollo/client'
+
 
 export default {
-  apollo: {
-
-  },
   name: 'App',
   data () {
     return {
