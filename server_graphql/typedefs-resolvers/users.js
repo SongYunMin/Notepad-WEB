@@ -64,12 +64,12 @@ const resolvers = {
             for (const node of result) {
                 const key = await scryptPromise(args.pw, node.salt, 64);
                 if (key && node.ID === args.id && node.password === key.toString('base64')) {
-                    console.log(context.req.session)
                     if (context.req.session.cookie.id === '') {
                         context.req.session.cookie.id = args.id;
                         context.req.session.cookie.pw = key.toString('base64');
                     }
-                    console.log("여기는 유저: ",context.req.session)
+                    // context.getToken(context.session, {id: args.id, pw: key.toString('base64')})
+                    console.log(context.req.session)
                     return node.nickname.toString();
                 }
             }
@@ -77,7 +77,6 @@ const resolvers = {
         },
         // TODO : Session False
         logout: (parent, args, context) => {
-            console.log('세션 : ', context.req.session)
             if (context.req.session.cookie.id === '') {
                 context.req.session.destroy(err => {
                         if (err) {

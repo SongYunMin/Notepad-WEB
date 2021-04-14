@@ -55,7 +55,6 @@ export default {
 
       this.initData = await graphQLClient.request(query)
       console.log(this.initData)
-      debugger
 
 
       // const response = await fetch('http://localhost:3000/notepad/check', {

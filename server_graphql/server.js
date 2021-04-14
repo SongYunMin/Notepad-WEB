@@ -6,8 +6,9 @@ const queries = require('./typedefs-resolvers/_queries')
 const mutations = require('./typedefs-resolvers/_mutations')
 const users = require('./typedefs-resolvers/users')
 const notepads = require('./typedefs-resolvers/notepads')
-const {sequelize} = require('./models')
 const session = require('express-session');
+const FileStore = require('session-file-store')(session);
+const {sequelize} = require('./models')
 
 const typeDefs = [
     queries,
@@ -31,14 +32,12 @@ app.use(session({
     secret: 'secret',
     resave: false,
     saveUninitialized: true,
+    store: new FileStore(),
     cookie: {
-        id: '',
-        pw: '',
         maxAge: 60000
     },
 
 }));
-
 
 const server = new ApolloServer({
     cors: {
@@ -48,13 +47,11 @@ const server = new ApolloServer({
     resolvers,
     introspection: true,
     context: ({req}) =>{
-        console.log("테스트 : ", req.request)
         return {
-            req,
+            req
         }
     }
 })
-
 
 server.applyMiddleware({
     app
