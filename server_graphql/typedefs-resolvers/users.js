@@ -59,6 +59,7 @@ const resolvers = {
             }
             return 'OK';
         },
+        // TODO : Session - File - Store 에서 값을 가져오면?
         login: async (parent, args, context) => {
             const result = await db.User.findAll({attributes: ['ID', 'password', 'nickname', 'salt']});
             const scryptPromise = promisify(crypto.scrypt);
