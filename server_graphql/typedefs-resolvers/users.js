@@ -2,8 +2,6 @@ const {gql} = require('apollo-server')
 const db = require('../models')
 const promisify = require('util').promisify;
 const crypto = require('crypto');
-const express = require('express')
-const req = express()
 const typeDefs = gql`
     type User {
         ID: String!
@@ -63,7 +61,6 @@ const resolvers = {
         login: async (parent, args, context) => {
             const result = await db.User.findAll({attributes: ['ID', 'password', 'nickname', 'salt']});
             const scryptPromise = promisify(crypto.scrypt);
-            console.log("리퀘스트 : ", context.req.session);
             for (const node of result) {
                 const key = await scryptPromise(args.pw, node.salt, 64);
                 if (key && node.ID === args.id && node.password === key.toString('base64')) {
@@ -71,6 +68,7 @@ const resolvers = {
                         context.req.session.cookie.id = args.id;
                         context.req.session.cookie.pw = key.toString('base64');
                     }
+                    console.log("여기는 로그인", context.req.session)
                     return node.nickname.toString();
                 }
             }
@@ -78,6 +76,7 @@ const resolvers = {
         },
         // TODO : Session False
         logout: (parent, args, context) => {
+            console.log(context.req.session)
             if (context.req.session.cookie.id === '') {
                 context.req.session.destroy(err => {
                         if (err) {

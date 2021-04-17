@@ -8,7 +8,8 @@ const users = require('./typedefs-resolvers/users')
 const notepads = require('./typedefs-resolvers/notepads')
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
-const {sequelize} = require('./models')
+const cookieParser = require('cookie-parser');
+const MemoryStore = require('session-memory-store')(session);
 
 const typeDefs = [
     queries,
@@ -27,16 +28,17 @@ app.use(cors({
     credentials: true
 }));
 
+app.use(cookieParser());
+
 app.use(session({
     key: 'sid',
     secret: 'secret',
     resave: false,
     saveUninitialized: true,
-    store: new FileStore(),
+    store: new MemoryStore(),
     cookie: {
         maxAge: 60000
     },
-
 }));
 
 const server = new ApolloServer({

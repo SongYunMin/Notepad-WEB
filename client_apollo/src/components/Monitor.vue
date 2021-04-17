@@ -52,9 +52,8 @@ export default {
             initCheck
         }
       `
-
-      this.initData = await graphQLClient.request(query)
-      console.log(this.initData)
+      // this.initData = await graphQLClient.request(query)
+      // console.log(this.initData)
 
 
       // const response = await fetch('http://localhost:3000/notepad/check', {
@@ -73,44 +72,44 @@ export default {
       this.initialize()
     },
     initialize () {
-      const init = JSON.parse(this.initData)
-      console.log(init)
-      if (init.DATA === 'DATA_NOT_FOUND') {
-      } else {
-        for (let i = 0; i < init.count; i++) {
-          this.addTab()
-        }
-        for (let i = 0; i < init.notepad.length; i++) {
-          this.list[init.notepad[i].index].name = init.notepad[i].name
-          this.list[init.notepad[i].index].memo = init.notepad[i].memo
-        }
-      }
+      // const init = JSON.parse(this.initData)
+      // console.log(init)
+      // if (init.DATA === 'DATA_NOT_FOUND') {
+      // } else {
+      //   for (let i = 0; i < init.count; i++) {
+      //     this.addTab()
+      //   }
+      //   for (let i = 0; i < init.notepad.length; i++) {
+      //     this.list[init.notepad[i].index].name = init.notepad[i].name
+      //     this.list[init.notepad[i].index].memo = init.notepad[i].memo
+      //   }
+      // }
     },
     addTab () {
       this.list.push({name: '', memo: '', index: this.count++})
     },
     async saveTab () {
-      const data = {
-        name: this.currentPage.name,
-        memo: this.currentPage.memo,
-        count: this.count,
-        activeIndex: this.currentShowPage
-      }
-      const response = await fetch(`http://localhost:3000/notepad/save`, {
-        mode: 'cors',
-        credentials: 'include',
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
-      })
-      if (response.status === 200) {
-        const result = await response.text()
-        if (result === 'False') {
-          alert('세션이 만료되었습니다. 다시 로그인해주세요.')
-          this.back(0)
-        }
-      }
-      this.saveTitle = this.currentPage.name
+      // const data = {
+      //   name: this.currentPage.name,
+      //   memo: this.currentPage.memo,
+      //   count: this.count,
+      //   activeIndex: this.currentShowPage
+      // }
+      // const response = await fetch(`http://localhost:3000/notepad/save`, {
+      //   mode: 'cors',
+      //   credentials: 'include',
+      //   method: 'POST',
+      //   headers: {'Content-Type': 'application/json'},
+      //   body: JSON.stringify(data)
+      // })
+      // if (response.status === 200) {
+      //   const result = await response.text()
+      //   if (result === 'False') {
+      //     alert('세션이 만료되었습니다. 다시 로그인해주세요.')
+      //     this.back(0)
+      //   }
+      // }
+      // this.saveTitle = this.currentPage.name
     },
     loadTab (data) {
       this.list.push({name: data.name, memo: data.memo, index: this.count++})

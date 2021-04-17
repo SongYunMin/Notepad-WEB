@@ -14,7 +14,7 @@ const typeDefs = gql`
 const resolvers = {
     Query: {
         initCheck: async(parent, context) => {
-            console.log("노트패드 세션 : ", context.req.session)
+            // console.log("노트패드 세션 : ", context.req.session)
 
             // console.log("init::::", context.req.session)
             // if (context.req.session.user) {       // 사용자 데이터(Session)가 있다면
