@@ -9,7 +9,7 @@ import {InMemoryCache} from 'apollo-cache-inmemory'
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:3000/graphql',
-  credentials: 'same-origin'
+  credentials: 'include',
 })
 
 const cache = new InMemoryCache()
@@ -31,7 +31,7 @@ new Vue({
   el: '#app',
   components: { App },
   apolloProvider,
-  template: '<App/>'
+  template: '<App/>',
 })
 
 export default {

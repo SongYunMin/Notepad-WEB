@@ -75,7 +75,7 @@ const resolvers = {
         logout: (parent, args, context) => {
             const {req} = context;
             console.log(req.session)
-            if (req.session.cookie.id) {
+            // if (req.session.cookie.id) {
                 req.session.destroy(err => {
                         if (err) {
                             return err;
@@ -84,7 +84,7 @@ const resolvers = {
                         return 'OK';
                     }
                 )
-            }
+            // }
         }
     }
 }

@@ -80,7 +80,6 @@ router.post('/save', async (req, res) => {
         tab: req.body.activeIndex
     }
 
-    // TODO : DATA UPDATE
     db.Notepad.create({
         user_id: NOTEPAD_DATA.user_id,
         name: NOTEPAD_DATA.name,

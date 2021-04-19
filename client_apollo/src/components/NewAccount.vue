@@ -30,9 +30,7 @@
 </template>
 
 <script>
-import {GraphQLClient, gql} from 'graphql-request'
-const endpoint = "http://localhost:3000/graphql"
-const graphQLClient = new GraphQLClient(endpoint)
+import gql from 'graphql-tag'
 
 export default {
   name: 'NewAccount',
@@ -42,21 +40,22 @@ export default {
       pw: '',
       pwck: '',
       nick: '',
-      temp: '',
       flag: 0
     }
   },
   methods: {
     async idCheck (ID) {
-      const query = gql`
-        query idCheck($ID: String){
-           idCheck(ID: $ID)
-        }`
-      const val = {
-        ID: ID
-      }
-      const result = await graphQLClient.request(query,val)
-      if (result.idCheck === 'False') {
+      const result = await this.$apollo.query({
+        query: gql`query idCheck($ID: String){
+            idCheck(ID: $ID)
+        }`,
+        // Parameters
+        variables: {
+          ID: ID
+        }
+      })
+      console.log(result);
+      if (result.data.idCheck === 'False') {
         alert('이미 존재하는 아이디입니다.')
         this.flag = 0
       } else {
@@ -76,18 +75,17 @@ export default {
         return -1
       }
 
-      const mutation = gql`
-        mutation newAccount($ID: String, $pw: String, $nickname: String){
+      const result = await this.$apollo.mutate({
+        mutation: gql`mutation newAccount($ID: String, $pw: String, $nickname: String){
             newAccount(ID: $ID, pw: $pw, nickname: $nickname)
-        }`
-       let val = {
-        ID: this.id,
-        pw: this.pw,
-        nickname: this.nick,
-      }
-      console.log(val)
-      const result = await graphQLClient.request(mutation,val)
-      if (result.newAccount === 'OK') {
+        }`,
+        variables:{
+          ID: this.id,
+          pw: this.pw,
+          nickname: this.nick,
+        }
+      })
+      if (result.data.newAccount === 'OK') {
         alert('회원 가입에 성공하였습니다.')
         this.$emit('back')
         return 1

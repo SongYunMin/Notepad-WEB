@@ -21,10 +21,7 @@
 </template>
 
 <script>
-import {GraphQLClient, gql} from 'graphql-request'
-const endpoint = "http://localhost:3000/graphql"
-const graphQLClient = new GraphQLClient(endpoint)
-
+import gql from 'graphql-tag'
 export default {
   name: 'Login',
   data () {
@@ -39,21 +36,19 @@ export default {
       this.$emit('sign-up')
     },
     async signIn () {
-      const mutation = gql`
-        mutation login($id: String, $pw: String){
+      const result = await this.$apollo.mutate({
+          mutation: gql`mutation login($id: String, $pw: String){
             login(id: $id, pw:$pw)
+        }`,
+        variables: {
+          id: this.ID,
+          pw: this.PW
         }
-      `
-      const val = {
-        id: this.ID,
-        pw: this.PW
-      }
-
-      const result = await graphQLClient.request(mutation,val)
-      if (result.login === 'False') {
+      })
+      if (result.data.login === 'False') {
         alert('아이디와 패스워드가 일치하지 않습니다.')
       } else {
-        alert(`${result.login}님 환영합니다.`)
+        alert(`로그인 되었습니다.`)
         this.$emit('sign-in')
       }
     }
