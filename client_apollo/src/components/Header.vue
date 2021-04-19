@@ -46,19 +46,19 @@ export default {
       console.log(result.logout)
 
 
-      const response = await fetch('http://localhost:3000/user/logout', {
-        mode: 'cors',
-        credentials: 'include'
-      })
-      if (response.status === 200) {
-        const result = await response.text()
-        if (result === 'OK') {
-          alert('로그아웃 되었습니다')
-          this.$emit('back', 0)
-        } else {
-          return alert('Error!')
-        }
-      }
+      // const response = await fetch('http://localhost:3000/user/logout', {
+      //   mode: 'cors',
+      //   credentials: 'include'
+      // })
+      // if (response.status === 200) {
+      //   const result = await response.text()
+      //   if (result === 'OK') {
+      //     alert('로그아웃 되었습니다')
+      //     this.$emit('back', 0)
+      //   } else {
+      //     return alert('Error!')
+      //   }
+      // }
     }
   }
 }
