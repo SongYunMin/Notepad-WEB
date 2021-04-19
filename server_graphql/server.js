@@ -7,8 +7,6 @@ const mutations = require('./typedefs-resolvers/_mutations')
 const users = require('./typedefs-resolvers/users')
 const notepads = require('./typedefs-resolvers/notepads')
 const session = require('express-session');
-const FileStore = require('session-file-store')(session);
-const cookieParser = require('cookie-parser');
 const MemoryStore = require('session-memory-store')(session);
 
 const typeDefs = [
@@ -28,8 +26,6 @@ app.use(cors({
     credentials: true
 }));
 
-app.use(cookieParser());
-
 app.use(session({
     key: 'sid',
     secret: 'secret',
@@ -43,22 +39,22 @@ app.use(session({
 
 const server = new ApolloServer({
     cors: {
-        origin: '*'
+        origin: '*',
+        credentials: true,
     },
     typeDefs,
     resolvers,
     introspection: true,
-    context: ({req}) =>{
-        return {
-            req
-        }
-    }
+    context: ({req}) => ({req})
 })
 
 server.applyMiddleware({
-    app
+    app,
+    path: "/graphql", cors: false
 })
 
 app.listen(3000, () => {
     console.log("server start!");
 })
+
+module.exports = MemoryStore

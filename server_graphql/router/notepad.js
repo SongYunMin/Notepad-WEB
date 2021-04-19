@@ -81,7 +81,6 @@ router.post('/save', async (req, res) => {
         tab: req.body.activeIndex
     }
 
-    // TODO : DATA UPDATE
     db.Notepad.create({
         user_id: NOTEPAD_DATA.user_id,
         name: NOTEPAD_DATA.name,
@@ -113,8 +112,6 @@ router.get('/load', async (req, res) => {
     }
 });
 
-// TODO : 삭제한 후에 남아있는 메모 Index 값 불일치
-// TODO : 삭제할 Note Index 저장한 뒤에 그것보다 큰 Index 가진 Notepad -1
 router.get('/delete', async (req, res) => {
     const newData = JSON.parse(req.query.data);
     const deleteNotepadResult = await db.Notepad.findOne({

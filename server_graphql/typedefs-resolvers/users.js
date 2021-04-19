@@ -1,7 +1,9 @@
-const {gql} = require('apollo-server')
+const {gql} = require('apollo-server-express')
 const db = require('../models')
 const promisify = require('util').promisify;
 const crypto = require('crypto');
+const session = require('express-session')
+
 const typeDefs = gql`
     type User {
         ID: String!
@@ -14,12 +16,6 @@ const typeDefs = gql`
         count: Int!
         active: Int!
     }
-    #    input PostNewAccount {
-    #        ID: String!
-    #        pw: String!
-    #        nickname: String!
-    #        salt: String!
-    #    }
 `
 
 const resolvers = {
@@ -48,7 +44,7 @@ const resolvers = {
             if (key) {
                 db.User.create({
                     ID: args.ID,
-                    pw: key.toString('base64'),
+                    password: key.toString('base64'),
                     nickname: args.nickname,
                     salt: salt
                 }).catch(err => {
@@ -59,16 +55,17 @@ const resolvers = {
         },
         // TODO : Session - File - Store 에서 값을 가져오면?
         login: async (parent, args, context) => {
+            const {req, res} = context;
+            console.log(req.session);
             const result = await db.User.findAll({attributes: ['ID', 'password', 'nickname', 'salt']});
             const scryptPromise = promisify(crypto.scrypt);
             for (const node of result) {
                 const key = await scryptPromise(args.pw, node.salt, 64);
                 if (key && node.ID === args.id && node.password === key.toString('base64')) {
-                    if (context.req.session.cookie.id === '') {
-                        context.req.session.cookie.id = args.id;
-                        context.req.session.cookie.pw = key.toString('base64');
+                    if (!req.session.cookie) {
+                        req.session.cookie.id = args.id;
+                        req.session.cookie.pw = key.toString('base64');
                     }
-                    console.log("여기는 로그인", context.req.session)
                     return node.nickname.toString();
                 }
             }
@@ -76,13 +73,14 @@ const resolvers = {
         },
         // TODO : Session False
         logout: (parent, args, context) => {
-            console.log(context.req.session)
-            if (context.req.session.cookie.id === '') {
-                context.req.session.destroy(err => {
+            const {req} = context;
+            console.log(req.session)
+            if (req.session.cookie.id) {
+                req.session.destroy(err => {
                         if (err) {
                             return err;
                         }
-                        console.log("로그아웃 : ", context.req.session)
+                        console.log("로그아웃 : ", req.session)
                         return 'OK';
                     }
                 )
