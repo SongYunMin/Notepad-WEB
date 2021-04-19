@@ -37,7 +37,6 @@ const resolvers = {
     },
     Mutation: {
         newAccount: async (parent, args) => {
-            console.log("받아온 인자 : ", args);
             const salt = await crypto.randomBytes(64).toString('base64');
             const scryptPromise = await promisify(crypto.scrypt);
             const key = await scryptPromise(args.pw, salt, 64);
@@ -56,7 +55,8 @@ const resolvers = {
         // TODO : Session - File - Store 에서 값을 가져오면?
         login: async (parent, args, context) => {
             const {req, res} = context;
-            console.log(req.session);
+            // console.log(req, res);
+
             const result = await db.User.findAll({attributes: ['ID', 'password', 'nickname', 'salt']});
             const scryptPromise = promisify(crypto.scrypt);
             for (const node of result) {
@@ -66,6 +66,7 @@ const resolvers = {
                         req.session.cookie.id = args.id;
                         req.session.cookie.pw = key.toString('base64');
                     }
+                    console.log(req.session)
                     return node.nickname.toString();
                 }
             }

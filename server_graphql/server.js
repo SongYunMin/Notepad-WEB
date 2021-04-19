@@ -7,7 +7,8 @@ const mutations = require('./typedefs-resolvers/_mutations')
 const users = require('./typedefs-resolvers/users')
 const notepads = require('./typedefs-resolvers/notepads')
 const session = require('express-session');
-const MemoryStore = require('session-memory-store')(session);
+const cookieParser = require('cookie-parser')
+const FileStore = require('session-file-store')(session);
 
 const typeDefs = [
     queries,
@@ -26,12 +27,14 @@ app.use(cors({
     credentials: true
 }));
 
+app.use(cookieParser());
+
 app.use(session({
     key: 'sid',
     secret: 'secret',
     resave: false,
     saveUninitialized: true,
-    store: new MemoryStore(),
+    store: new FileStore(),
     cookie: {
         maxAge: 60000
     },
@@ -45,7 +48,7 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     introspection: true,
-    context: ({req}) => ({req})
+    context: ({req,res}) => ({req, res})
 })
 
 server.applyMiddleware({
@@ -56,5 +59,3 @@ server.applyMiddleware({
 app.listen(3000, () => {
     console.log("server start!");
 })
-
-module.exports = MemoryStore
