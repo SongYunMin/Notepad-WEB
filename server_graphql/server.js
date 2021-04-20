@@ -42,16 +42,15 @@ app.use(session({
 }));
 
 const server = new ApolloServer({
-    cors: {
-        origin: '*',
-        credentials: true,
-    },
+    // cors: {
+    //     origin: '*',
+    //     credentials: true,
+    // },
     typeDefs,
     resolvers,
     introspection: true,
     context: ({req}) => ({req})
 })
-
 
 server.applyMiddleware({
     app,

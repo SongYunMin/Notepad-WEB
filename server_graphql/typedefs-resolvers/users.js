@@ -61,12 +61,16 @@ const resolvers = {
             for (const node of result) {
                 const key = await scryptPromise(args.pw, node.salt, 64);
                 if (key && node.ID === args.id && node.password === key.toString('base64')) {
-                    if (!req.session.cookie) {
+                    if (!req.session.cookie.id) {
                         req.session.cookie.id = args.id;
                         req.session.cookie.pw = key.toString('base64');
                     }
-                    console.log("로그인 : ", req.session)
-                    return node.nickname.toString();
+                    req.session.save(function(err){
+                        console.log("로그인 : ", req.session)
+                        console.log("리턴 값 : ", node.nickname.toString());
+                        return node.nickname.toString();
+                    });
+
                 }
             }
             return 'False';
@@ -74,16 +78,18 @@ const resolvers = {
         logout: (parent, args, context) => {
             const {req} = context
             console.log("로그아웃 : ", req.session)
-            if (req.session.cookie) {
+            if (req.session.cookie.id) {
                 req.session.destroy(err => {
                         if (err) {
+                            console.log("Session Delete Error!");
                             return err;
                         }
-                        console.log("로그아웃 : ", req.session)
+                        console.log("Session Delete Success");
                         return 'OK';
                     }
                 )
             }
+            console.log("세션 존재하지 않음");
         }
     }
 }

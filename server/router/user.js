@@ -47,7 +47,7 @@ router.post('/login', async (req, res) => {
                     pw: key.toString('base64'),
                     authorization: true
                 }
-                console.log(req.session.user);
+                console.log("로그인 : ", req.session);
              }
             return res.send(node.nickname.toString());
         }
@@ -56,6 +56,7 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/logout', (req, res) => {
+    console.log("로그아웃 : ", req.session);
     if (req.session.user) {
         req.session.destroy(err => {
                 if (err) {

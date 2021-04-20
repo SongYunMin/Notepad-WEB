@@ -8,9 +8,7 @@
 </template>
 
 <script>
-import {GraphQLClient, gql} from 'graphql-request'
-const endpoint = "http://localhost:3000/graphql"
-const graphQLClient = new GraphQLClient(endpoint)
+import gql from 'graphql-tag'
 
 export default {
   name: 'Header',
@@ -37,28 +35,20 @@ export default {
       }
     },
     async logout () {
-      const mutation = gql`
+      const result = await this.$apollo.mutate({
+        mutation: gql`
         mutation logout {
             logout
-        }
-      `
-      const result = await graphQLClient.request(mutation)
-      console.log(result.logout)
+        }`
+      })
 
-
-      // const response = await fetch('http://localhost:3000/user/logout', {
-      //   mode: 'cors',
-      //   credentials: 'include'
-      // })
-      // if (response.status === 200) {
-      //   const result = await response.text()
-      //   if (result === 'OK') {
-      //     alert('로그아웃 되었습니다')
-      //     this.$emit('back', 0)
-      //   } else {
-      //     return alert('Error!')
-      //   }
-      // }
+      if(result.data.logout === 'OK'){
+        alert('로그아웃 되었습니다.');
+        this.$emit('back', 0)
+      }else{
+        alert('로그아웃에 실패하였습니다.');
+        console.error(result.data.logout)
+      }
     }
   }
 }
