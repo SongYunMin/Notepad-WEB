@@ -2,7 +2,7 @@ const {gql} = require('apollo-server-express')
 const db = require('../models')
 const promisify = require('util').promisify;
 const crypto = require('crypto');
-const session = require('express-session')
+
 
 const typeDefs = gql`
     type User {
@@ -54,9 +54,8 @@ const resolvers = {
         },
         // TODO : Session - File - Store 에서 값을 가져오면?
         login: async (parent, args, context) => {
-            const {req, res} = context;
-            // console.log(req, res);
-
+            const {req} = context
+            console.log(req)
             const result = await db.User.findAll({attributes: ['ID', 'password', 'nickname', 'salt']});
             const scryptPromise = promisify(crypto.scrypt);
             for (const node of result) {
@@ -66,17 +65,16 @@ const resolvers = {
                         req.session.cookie.id = args.id;
                         req.session.cookie.pw = key.toString('base64');
                     }
-                    console.log(req.session)
+                    console.log("로그인 : ", req.session)
                     return node.nickname.toString();
                 }
             }
             return 'False';
         },
-        // TODO : Session False
         logout: (parent, args, context) => {
-            const {req} = context;
-            console.log(req.session)
-            // if (req.session.cookie.id) {
+            const {req} = context
+            console.log("로그아웃 : ", req.session)
+            if (req.session.cookie) {
                 req.session.destroy(err => {
                         if (err) {
                             return err;
@@ -85,7 +83,7 @@ const resolvers = {
                         return 'OK';
                     }
                 )
-            // }
+            }
         }
     }
 }

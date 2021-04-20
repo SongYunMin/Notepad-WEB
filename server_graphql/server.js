@@ -23,7 +23,7 @@ const resolvers = [
 ]
 
 app.use(cors({
-    origin: true,
+    origin: 'http://localhost:8080',
     credentials: true
 }));
 
@@ -36,6 +36,7 @@ app.use(session({
     saveUninitialized: true,
     store: new FileStore(),
     cookie: {
+        httpOnly: true,
         maxAge: 60000
     },
 }));
@@ -48,8 +49,9 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     introspection: true,
-    context: ({req,res}) => ({req, res})
+    context: ({req}) => ({req})
 })
+
 
 server.applyMiddleware({
     app,
@@ -59,3 +61,4 @@ server.applyMiddleware({
 app.listen(3000, () => {
     console.log("server start!");
 })
+
