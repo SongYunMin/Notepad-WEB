@@ -50,7 +50,7 @@ export default {
             initCheck(ID: $ID)
         }`,
         variables: {
-          ID: this.getCookie('loginID')
+          ID: 'secret'
         }
       })
 
@@ -78,20 +78,12 @@ export default {
       this.list.push({name: '', memo: '', index: this.count++})
     },
     async saveTab () {
-      console.log({
-        ID: this.getCookie('loginID'),
-        name: this.currentPage.name,
-        memo: this.currentPage.memo,
-        count: this.count,
-        activeIndex: this.currentShowPage
-      })
       const result = await this.$apollo.mutate({
         mutation: gql`
-            mutation saveNotepad($ID: String, $name: String, $memo: String, $count: Int, $activeIndex: Int){
-            saveNotepad(ID: $ID, name: $name, memo: $memo, count: $count, activeIndex: $activeIndex)
+            mutation saveNotepad($name: String, $memo: String, $count: Int, $activeIndex: Int){
+            saveNotepad(name: $name, memo: $memo, count: $count, activeIndex: $activeIndex)
         }`,
         variables: {
-          ID: this.getCookie('loginID'),
           name: this.currentPage.name,
           memo: this.currentPage.memo,
           count: this.count,
@@ -113,11 +105,10 @@ export default {
     },
     async removeTab (index, notepadName) {
       const result = await this.$apollo.query({
-        query: gql`query deleteNotepad($ID: String, $name: String, $count: Int){
-            deleteNotepad(ID: $ID, name: $name, count: $count)
+        query: gql`query deleteNotepad($name: String, $count: Int){
+            deleteNotepad(name: $name, count: $count)
         }`,
         variables: {
-          ID: this.getCookie('loginID'),
           name: notepadName,
           count: --this.count
         }
@@ -146,10 +137,6 @@ export default {
     },
     back (number) {
       this.$emit('back', number)
-    },
-    getCookie(name) {
-      let value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-      return value ? value[2] : null
     },
   }
 }

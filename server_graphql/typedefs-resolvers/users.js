@@ -74,21 +74,21 @@ const resolvers = {
             }
             return 'False';
         },
-        logout: (parent, args, context) => {
-            const {req} = context
-
-            // if (req.session) {
-            //     req.session.destroy(err => {
-            //             if (err) {
-            //                 console.log("Session Delete Error!");
-            //                 return err;
-            //             }
-            //             req.session;
-            //         }
-            //     )
-            // }
-            return 'OK';
-        }
+        // logout: (parent, args, context) => {
+        //     const {req} = context
+        //
+        //     // if (req.session) {
+        //     //     req.session.destroy(err => {
+        //     //             if (err) {
+        //     //                 console.log("Session Delete Error!");
+        //     //                 return err;
+        //     //             }
+        //     //             req.session;
+        //     //         }
+        //     //     )
+        //     // }
+        //     return 'OK';
+        // }
     }
 }
 

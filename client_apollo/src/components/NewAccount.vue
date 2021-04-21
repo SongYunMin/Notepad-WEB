@@ -54,7 +54,6 @@ export default {
           ID: ID
         }
       })
-      console.log(result);
       if (result.data.idCheck === 'False') {
         alert('이미 존재하는 아이디입니다.')
         this.flag = 0

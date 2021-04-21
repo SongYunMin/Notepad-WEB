@@ -6,12 +6,10 @@ const queries = require('./typedefs-resolvers/_queries')
 const mutations = require('./typedefs-resolvers/_mutations')
 const users = require('./typedefs-resolvers/users')
 const notepads = require('./typedefs-resolvers/notepads')
-// const session = require('express-session');
-// const cookieParser = require('cookie-parser')
-// const MemoryStore = require('session-memory-store')(session);
+const cookieParser = require('cookie-parser')
+app.use(cookieParser());
 
 const {AuthenticationError} = require("apollo-server-errors");
-
 
 const corsOption = {
     origin: 'http://localhost:8080',
@@ -19,7 +17,6 @@ const corsOption = {
 }
 
 // app.use(cors(corsOption));
-// app.use(cookieParser());
 // app.use(session({
 //     httpOnly: false,
 //     secret: 'secret',
@@ -46,7 +43,7 @@ const resolvers = [
 const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: ({req,res}) => ({req, res})
+    context: ({req, res}) => ({req, res})
 })
 
 // TODO : 여기에 있는 CORS 확인
