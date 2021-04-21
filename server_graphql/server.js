@@ -6,27 +6,30 @@ const queries = require('./typedefs-resolvers/_queries')
 const mutations = require('./typedefs-resolvers/_mutations')
 const users = require('./typedefs-resolvers/users')
 const notepads = require('./typedefs-resolvers/notepads')
-const session = require('express-session');
-const cookieParser = require('cookie-parser')
-const MemoryStore = require('session-memory-store')(session);
+// const session = require('express-session');
+// const cookieParser = require('cookie-parser')
+// const MemoryStore = require('session-memory-store')(session);
+
+const {AuthenticationError} = require("apollo-server-errors");
+
 
 const corsOption = {
     origin: 'http://localhost:8080',
     credentials: true
 }
 
-app.use(cors(corsOption));
-app.use(cookieParser());
-app.use(session({
-    httpOnly: false,
-    secret: 'secret',
-    resave: false,
-    saveUninitialized: true,
-    store: new MemoryStore(),
-    cookie:{
-        maxAge: 1
-    }
-}));
+// app.use(cors(corsOption));
+// app.use(cookieParser());
+// app.use(session({
+//     httpOnly: false,
+//     secret: 'secret',
+//     resave: false,
+//     saveUninitialized: true,
+//     store: new MemoryStore(),
+//     cookie:{
+//         maxAge: 1
+//     }
+// }));
 
 const typeDefs = [
     queries,

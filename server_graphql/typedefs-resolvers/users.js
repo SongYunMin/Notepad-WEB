@@ -2,7 +2,10 @@ const {gql} = require('apollo-server-express')
 const db = require('../models')
 const promisify = require('util').promisify;
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+require('dotenv').config()
 
+const SECRET_KEY = process.env.SECRET_KEY;
 
 const typeDefs = gql`
     type User {
@@ -54,13 +57,18 @@ const resolvers = {
         },
         // TODO : Session - File - Store 에서 값을 가져오면?
         login: async (parent, args, context) => {
-            const {req, res} = context
+            const {res} = context
             const result = await db.User.findAll({attributes: ['ID', 'password', 'nickname', 'salt']});
             const scryptPromise = promisify(crypto.scrypt);
             for (const node of result) {
                 const key = await scryptPromise(args.pw, node.salt, 64);
                 if (key && node.ID === args.id && node.password === key.toString('base64')) {
-                    res.cookie('loginID', args.id, {maxAge: 60000})
+                    const token = jwt.sign({
+                        ID: args.id
+                    }, SECRET_KEY, {
+                        expiresIn: 6000
+                    });
+                    res.cookie('token', token);
                     return node.nickname.toString();
                 }
             }
@@ -68,16 +76,17 @@ const resolvers = {
         },
         logout: (parent, args, context) => {
             const {req} = context
-            if (req.session) {
-                req.session.destroy(err => {
-                        if (err) {
-                            console.log("Session Delete Error!");
-                            return err;
-                        }
-                        req.session;
-                    }
-                )
-            }
+
+            // if (req.session) {
+            //     req.session.destroy(err => {
+            //             if (err) {
+            //                 console.log("Session Delete Error!");
+            //                 return err;
+            //             }
+            //             req.session;
+            //         }
+            //     )
+            // }
             return 'OK';
         }
     }

@@ -40,23 +40,25 @@ export default {
       }
     },
     async logout() {
-      console.log(this.getCookie('sid'));
-      this.deleteCookie('connect.sid');
-      this.deleteCookie('loginID');
-      const result = await this.$apollo.mutate({
-        mutation: gql`
-        mutation logout {
-            logout
-        }`
-      })
 
-      if (result.data.logout === 'OK') {
-        alert('로그아웃 되었습니다.')
-        this.$emit('back', 0)
-      } else {
-        alert('로그아웃에 실패하였습니다.');
-        console.error(result.data.logout)
-      }
+      document.cookie = 'token' + '=; expires=Thu, 01 Jan 1970 00:00:10 GMT;';
+      alert('로그아웃 되었습니다.');
+      // console.log(this.getCookie('sid'));
+      // this.deleteCookie('connect.sid');
+      // this.deleteCookie('loginID');
+      // const result = await this.$apollo.mutate({
+      //   mutation: gql`
+      //   mutation logout {
+      //       logout
+      //   }`
+      // })
+      // if (result.data.logout === 'OK') {
+      //   alert('로그아웃 되었습니다.')
+      //   this.$emit('back', 0)
+      // } else {
+      //   alert('로그아웃에 실패하였습니다.');
+      //   console.error(result.data.logout)
+      // }
     },
     getCookie(name) {
       let value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
