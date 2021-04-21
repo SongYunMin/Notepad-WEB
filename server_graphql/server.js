@@ -8,7 +8,25 @@ const users = require('./typedefs-resolvers/users')
 const notepads = require('./typedefs-resolvers/notepads')
 const session = require('express-session');
 const cookieParser = require('cookie-parser')
-const FileStore = require('session-file-store')(session);
+const MemoryStore = require('session-memory-store')(session);
+
+const corsOption = {
+    origin: 'http://localhost:8080',
+    credentials: true
+}
+
+app.use(cors(corsOption));
+app.use(cookieParser());
+app.use(session({
+    httpOnly: false,
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: true,
+    store: new MemoryStore(),
+    cookie:{
+        maxAge: 1
+    }
+}));
 
 const typeDefs = [
     queries,
@@ -22,39 +40,16 @@ const resolvers = [
     notepads.resolvers
 ]
 
-app.use(cors({
-    origin: 'http://localhost:8080',
-    credentials: true
-}));
-
-app.use(cookieParser());
-
-app.use(session({
-    key: 'sid',
-    secret: 'secret',
-    resave: false,
-    saveUninitialized: true,
-    store: new FileStore(),
-    cookie: {
-        httpOnly: true,
-        maxAge: 60000
-    },
-}));
-
 const server = new ApolloServer({
-    // cors: {
-    //     origin: '*',
-    //     credentials: true,
-    // },
     typeDefs,
     resolvers,
-    introspection: true,
-    context: ({req}) => ({req})
+    context: ({req,res}) => ({req, res})
 })
 
+// TODO : 여기에 있는 CORS 확인
 server.applyMiddleware({
     app,
-    path: "/graphql", cors: false
+    cors: corsOption
 })
 
 app.listen(3000, () => {

@@ -12,11 +12,9 @@ const httpLink = createHttpLink({
   credentials: 'include',
 })
 
-const cache = new InMemoryCache()
-
 const apolloClient = new ApolloClient({
+  cache: new InMemoryCache(),
   link: httpLink,
-  cache
 })
 
 Vue.config.productionTip = false

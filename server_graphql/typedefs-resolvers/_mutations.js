@@ -5,7 +5,7 @@ const typeDefs = gql`
         newAccount(ID: String, pw: String, nickname: String): String!
         login(id: String, pw: String): String!
         logout: String
-        saveNotepad (name: String, memo: String, count: Int, activeIndex: Int): String!
+        saveNotepad (ID: String, name: String, memo: String, count: Int, activeIndex: Int): String
     }
 `
 

@@ -12,14 +12,19 @@ import gql from 'graphql-tag'
 
 export default {
   name: 'Header',
+  data () {
+    return {
+      loginID : this.getCookie('loginID')
+    }
+  },
   methods: {
-    addTab () {
+    addTab() {
       this.$emit('add-tab')
     },
-    saveTab () {
+    saveTab() {
       this.$emit('save-tab')
     },
-    async loadEvent () {
+    async loadEvent() {
       const search = prompt('불러올 메모의 제목을 입력하세요')
       const response = await fetch(`http://localhost:3000/notepad/load?name=${search}`, {
         mode: 'cors',
@@ -34,7 +39,10 @@ export default {
         })
       }
     },
-    async logout () {
+    async logout() {
+      console.log(this.getCookie('sid'));
+      this.deleteCookie('connect.sid');
+      this.deleteCookie('loginID');
       const result = await this.$apollo.mutate({
         mutation: gql`
         mutation logout {
@@ -42,16 +50,30 @@ export default {
         }`
       })
 
-      if(result.data.logout === 'OK'){
-        alert('로그아웃 되었습니다.');
+      if (result.data.logout === 'OK') {
+        alert('로그아웃 되었습니다.')
         this.$emit('back', 0)
-      }else{
+      } else {
         alert('로그아웃에 실패하였습니다.');
         console.error(result.data.logout)
       }
+    },
+    getCookie(name) {
+      let value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+      console.log("쿠키 : ", value)
+      return value ? value[2] : null
+    },
+    setCookie(name, value, exp) {
+      let date = new Date();
+      date.setTime(date.getTime() + exp * 24 * 60 * 60 * 1000);
+      document.cookie = name + '=' + value + ';expires=' + date.toUTCString() + ';path=/';
+    },
+    deleteCookie(name){
+      document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     }
   }
 }
+
 </script>
 
 <style scoped>

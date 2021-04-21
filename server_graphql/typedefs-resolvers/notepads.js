@@ -9,69 +9,100 @@ const typeDefs = gql`
         memo: String
         tab: Int!
     }
- `
+`
 
 const resolvers = {
     Query: {
-        initCheck: async(parent, context) => {
-            // console.log("노트패드 세션 : ", context.req.session)
+        initCheck: async (parent, args) => {
+            console.log("초기화 : ", args.ID);
+            if (args.ID) {       // 사용자 데이터(Session)가 있다면
+                console.log("Session...OK");
+            } else {                      // 세션이 없는데 Notepad 접근 시
+                return 'False';
+            }
 
-            // console.log("init::::", context.req.session)
-            // if (context.req.session.user) {       // 사용자 데이터(Session)가 있다면
-            //     console.log("Session...OK");
-            // } else {                      // 세션이 없는데 Notepad 접근 시
-            //     console.log(context.req.session.user);
-            //     return 'False';
-            // }
-            //
-            // const initUserSessionResult = await db.User_SESSION.findOne({
-            //     where: {user_id: context.req.session.user.id}
-            // });
-            // console.log(initUserSessionResult)
-            //
-            // const initNotepadResult = await db.Notepad.findAll({
-            //     where: {user_id: context.req.session.user.id}
-            // })
-            // console.log(initNotepadResult)
-            //
-            //
-            // if(initUserSessionResult === null || initNotepadResult === null){
-            //     return {DATA : "DATA_NOT_FOUND"};
-            // }
-            //
-            // let initData = {
-            //     count: initUserSessionResult.count,
-            //     activeIndex: initUserSessionResult.active,
-            //     notepad: []
-            // }
-            //
-            // for (const node of initNotepadResult) {
-            //     initData.notepad.push({
-            //         name: node.name,
-            //         memo: node.memo,
-            //         index: node.tab
-            //     });
-            // }
-            // return JSON.stringify(initData);
+            const initUserSessionResult = await db.User_SESSION.findOne({
+                where: {user_id: args.ID}
+            });
+
+            const initNotepadResult = await db.Notepad.findAll({
+                where: {user_id: args.ID}
+            })
+
+            if (initUserSessionResult === null || initNotepadResult === null) {
+                return {DATA: "DATA_NOT_FOUND"};
+            }
+
+            let initData = {
+                count: initUserSessionResult.count,
+                activeIndex: initUserSessionResult.active,
+                notepad: []
+            }
+
+            for (const node of initNotepadResult) {
+                initData.notepad.push({
+                    name: node.name,
+                    memo: node.memo,
+                    index: node.tab
+                });
+            }
+            return JSON.stringify(initData);
+        },
+        loadNotepad: async (parent, args, context) => {
+            const {req, res} = context;
+            if (args.ID === null) {
+                return res.send({name: 'False'});
+            }
+            try {
+                const loadNotepadResult = await db.Notepad.findOne({
+                    where: {name: args.name}
+                });
+                return res.send({
+                    name: loadNotepadResult.name,
+                    memo: loadNotepadResult.memo
+                });
+            } catch (err) {
+                return res.send({name: 'False'});
+            }
+        },
+        deleteNotepad: async(parent, args, context) => {
+            const {req, res} = context
+            const deleteNotepadResult = await db.Notepad.findOne({
+                where: {name: args.name}
+            })
+            console.log(deleteNotepadResult.tab)
+            db.Notepad.destroy({
+                where: {name: args.name}
+            })
+
+            db.User_SESSION.update({
+                count: args.count,
+                active: 0
+            }, {where:{user_id: args.ID}});
+
+            return res.send('OK');
         }
     },
     Mutation: {
-        saveNotepad: async (parent, args, context, info) => {
+        saveNotepad: async (parent, args, context) => {
+            console.log(args.ID);
+            const {req, res} = context
             if (args.name.indexOf('../') !== -1) {
                 return res.send('Unable to access.');
             }
-
-            if (!context.session.user) {
+            if (args.ID === null) {
                 return res.send('False');
             }
 
             const USER_SESSION_DATA = {
-                user_id: context.session.user.id,
+                user_id: args.ID,
                 count: args.count,
                 active: args.activeIndex
             }
 
-            const userSessionResult = await db.User_SESSION.findOne({where: {user_id: req.session.user.id}});
+            console.log("유저 데이터 : ", USER_SESSION_DATA)
+
+            const userSessionResult = await db.User_SESSION.findOne({where: {user_id: args.ID}});
             if (userSessionResult === null) {
                 db.User_SESSION.create({
                     user_id: USER_SESSION_DATA.user_id,
@@ -92,7 +123,7 @@ const resolvers = {
             }
 
             const NOTEPAD_DATA = {
-                user_id: context.session.user.id,
+                user_id: args.ID,
                 name: args.name,
                 memo: args.memo,
                 tab: args.activeIndex

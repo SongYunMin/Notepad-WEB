@@ -89,7 +89,6 @@ router.post('/save', async (req, res) => {
     }).catch(err => {
         throw err;
     });
-
     return res.send('OK');
 
 });
@@ -121,8 +120,6 @@ router.get('/delete', async (req, res) => {
     db.Notepad.destroy({
         where: {name: newData.name}
     })
-
-
 
     db.User_SESSION.update({
         count: newData.count,

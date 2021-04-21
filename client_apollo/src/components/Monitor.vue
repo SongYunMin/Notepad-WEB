@@ -15,10 +15,7 @@
 import Header from './Header.vue'
 import Tabs from './Tabs.vue'
 import Editor from './Editor.vue'
-import {gql, GraphQLClient} from 'graphql-request'
-
-const endpoint = "http://localhost:3000/graphql"
-const graphQLClient = new GraphQLClient(endpoint)
+import gql from 'graphql-tag'
 
 export default {
   name: 'Monitor',
@@ -30,7 +27,7 @@ export default {
       count: 0,
       currentShowPage: 0,
       saveTitle: 'Tab',
-      init: null
+      init: null,
     }
   },
   components: {
@@ -47,69 +44,66 @@ export default {
   },
   methods: {
     async checkSessionRequest () {
-      const query = gql`
-        query initCheck{
-            initCheck
+      const result = await this.$apollo.query({
+        query: gql`
+        query initCheck($ID: String){
+            initCheck(ID: $ID)
+        }`,
+        variables: {
+          ID: this.getCookie('loginID')
         }
-      `
-      // this.initData = await graphQLClient.request(query)
-      // console.log(this.initData)
+      })
 
-
-      // const response = await fetch('http://localhost:3000/notepad/check', {
-      //   mode: 'cors',
-      //   credentials: 'include'
-      // })
-      // if (response.status === 200) {
-      //   const result = await response.text()
-      //   if (result === 'False') {
-      //     alert('비정상 접근입니다. 다시 로그인 해주세요.')
-      //     location.href = 'Login.html'
-      //   } else {
-      //     this.initData = result
-      //   }
-      // }
+      if(JSON.parse(result.data.initCheck).DATA === 'DATA_NOT_FOUND'){
+        return console.log("초기 데이터 없음");
+      }
+      this.initData = result.data.initCheck
       this.initialize()
     },
     initialize () {
-      // const init = JSON.parse(this.initData)
-      // console.log(init)
-      // if (init.DATA === 'DATA_NOT_FOUND') {
-      // } else {
-      //   for (let i = 0; i < init.count; i++) {
-      //     this.addTab()
-      //   }
-      //   for (let i = 0; i < init.notepad.length; i++) {
-      //     this.list[init.notepad[i].index].name = init.notepad[i].name
-      //     this.list[init.notepad[i].index].memo = init.notepad[i].memo
-      //   }
-      // }
+      const init = JSON.parse(this.initData)
+      console.log(init)
+      if (init.DATA === 'DATA_NOT_FOUND') {
+      } else {
+        for (let i = 0; i < init.count; i++) {
+          this.addTab()
+        }
+        for (let i = 0; i < init.notepad.length; i++) {
+          this.list[init.notepad[i].index].name = init.notepad[i].name
+          this.list[init.notepad[i].index].memo = init.notepad[i].memo
+        }
+      }
     },
     addTab () {
       this.list.push({name: '', memo: '', index: this.count++})
     },
     async saveTab () {
-      // const data = {
-      //   name: this.currentPage.name,
-      //   memo: this.currentPage.memo,
-      //   count: this.count,
-      //   activeIndex: this.currentShowPage
-      // }
-      // const response = await fetch(`http://localhost:3000/notepad/save`, {
-      //   mode: 'cors',
-      //   credentials: 'include',
-      //   method: 'POST',
-      //   headers: {'Content-Type': 'application/json'},
-      //   body: JSON.stringify(data)
-      // })
-      // if (response.status === 200) {
-      //   const result = await response.text()
-      //   if (result === 'False') {
-      //     alert('세션이 만료되었습니다. 다시 로그인해주세요.')
-      //     this.back(0)
-      //   }
-      // }
-      // this.saveTitle = this.currentPage.name
+      console.log({
+        ID: this.getCookie('loginID'),
+        name: this.currentPage.name,
+        memo: this.currentPage.memo,
+        count: this.count,
+        activeIndex: this.currentShowPage
+      })
+      const result = await this.$apollo.mutate({
+        mutation: gql`
+            mutation saveNotepad($ID: String, $name: String, $memo: String, $count: Int, $activeIndex: Int){
+            saveNotepad(ID: $ID, name: $name, memo: $memo, count: $count, activeIndex: $activeIndex)
+        }`,
+        variables: {
+          ID: this.getCookie('loginID'),
+          name: this.currentPage.name,
+          memo: this.currentPage.memo,
+          count: this.count,
+          activeIndex: this.currentShowPage
+        }
+      })
+
+      if(result.data.saveNotepad === 'False'){
+        alert('세션이 만료되었습니다. 다시 로그인해주세요.')
+        this.back(0)
+      }
+      this.saveTitle = this.currentPage.name
     },
     loadTab (data) {
       this.list.push({name: data.name, memo: data.memo, index: this.count++})
@@ -118,30 +112,45 @@ export default {
       this.currentShowPage = index
     },
     async removeTab (index, notepadName) {
-      const data = {
-        count: --this.count,
-        name: notepadName,
-        index: index
-      }
-      const response = await fetch(`http://localhost:3000/notepad/delete?data=${JSON.stringify(data)}`, {
-        mode: 'cors',
-        credentials: 'include',
-        method: 'GET',
-        headers: {'Content-Type': 'application/json'}
-      })
-      if (response.status === 200) {
-        const result = await response.json()
-        if (result.result === 'OK') {
-          this.list.splice(index, 1)
-          return alert('삭제 완료')
-        } else {
-          return alert('삭제 오류!')
+      const result = await this.$apollo.query({
+        query: gql`query deleteNotepad($ID: String, $name: String, $count: Int){
+            deleteNotepad(ID: $ID, name: $name, count: $count)
+        }`,
+        variables: {
+          ID: this.getCookie('loginID'),
+          name: notepadName,
+          count: --this.count
         }
+      })
+
+      if(result.data.deleteNotepad === 'OK'){
+        this.list.splice(index, 1)
+        return alert('삭제 완료')
       }
+      //
+      // const response = await fetch(`http://localhost:3000/notepad/delete?data=${JSON.stringify(data)}`, {
+      //   mode: 'cors',
+      //   credentials: 'include',
+      //   method: 'GET',
+      //   headers: {'Content-Type': 'application/json'}
+      // })
+      // if (response.status === 200) {
+      //   const result = await response.json()
+      //   if (result.result === 'OK') {
+      //     this.list.splice(index, 1)
+      //     return alert('삭제 완료')
+      //   } else {
+      //     return alert('삭제 오류!')
+      //   }
+      // }
     },
     back (number) {
       this.$emit('back', number)
-    }
+    },
+    getCookie(name) {
+      let value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+      return value ? value[2] : null
+    },
   }
 }
 </script>
