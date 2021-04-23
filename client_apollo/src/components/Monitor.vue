@@ -53,16 +53,12 @@ export default {
           ID: 'secret'
         }
       })
-
-      if(JSON.parse(result.data.initCheck).DATA === 'DATA_NOT_FOUND'){
-        return console.log("초기 데이터 없음");
-      }
       this.initData = result.data.initCheck
       this.initialize()
     },
     initialize () {
-      const init = JSON.parse(this.initData)
-      console.log(init)
+      const init = JSON.parse(this.initData);
+      console.log("초기 데이터 : ", init)
       if (init.DATA === 'DATA_NOT_FOUND') {
       } else {
         for (let i = 0; i < init.count; i++) {

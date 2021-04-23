@@ -27,7 +27,6 @@ const resolvers = {
             try {
                 const result = await db.User.findAll({attributes: ['ID']});
                 for (const node of result) {
-                    console.log(node)
                     if (node.ID === args.ID) {
                         return 'False';
                     }
@@ -74,21 +73,6 @@ const resolvers = {
             }
             return 'False';
         },
-        // logout: (parent, args, context) => {
-        //     const {req} = context
-        //
-        //     // if (req.session) {
-        //     //     req.session.destroy(err => {
-        //     //             if (err) {
-        //     //                 console.log("Session Delete Error!");
-        //     //                 return err;
-        //     //             }
-        //     //             req.session;
-        //     //         }
-        //     //     )
-        //     // }
-        //     return 'OK';
-        // }
     }
 }
 

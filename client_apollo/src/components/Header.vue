@@ -30,13 +30,15 @@ export default {
         }
       })
 
+      console.log(result.data.loadNotepad);
+
       if(result.data.loadNotepad === 'False'){
         alert('저장된 메모가 없습니다.')
       }
       const resultData = JSON.parse(result.data.loadNotepad)
       this.$emit('load-tab', {
-        name: result.name,
-        memo: result.memo
+        name: resultData.name,
+        memo: resultData.memo
       })
 
       //

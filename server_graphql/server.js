@@ -7,7 +7,6 @@ const mutations = require('./typedefs-resolvers/_mutations')
 const users = require('./typedefs-resolvers/users')
 const notepads = require('./typedefs-resolvers/notepads')
 const cookieParser = require('cookie-parser')
-app.use(cookieParser());
 
 const {AuthenticationError} = require("apollo-server-errors");
 
@@ -15,6 +14,7 @@ const corsOption = {
     origin: 'http://localhost:8080',
     credentials: true
 }
+app.use(cookieParser());
 
 // app.use(cors(corsOption));
 // app.use(session({

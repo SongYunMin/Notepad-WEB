@@ -24,7 +24,6 @@ function tokenDecode(token) {
 
 const resolvers = {
     Query: {
-        // TODO : ID 인자 필요없으면 지워라!
         initCheck: async (parent, args, context) => {
             const {req, res} = context;
             const decode = tokenDecode(req.cookies.token);
@@ -44,7 +43,7 @@ const resolvers = {
             })
 
             if (initUserSessionResult === null || initNotepadResult === null) {
-                return {DATA: "DATA_NOT_FOUND"};
+                return JSON.stringify({DATA: "DATA_NOT_FOUND"});
             }
 
             let initData = {
@@ -63,19 +62,18 @@ const resolvers = {
             return JSON.stringify(initData);
         },
         // TODO : ERR_HTTP_HEADERS_SENT
-        loadNotepad: async (parent, args, context) => {
+        loadNotepad: async(parent, args, context) => {
             const {req, res} = context;
             const decode = tokenDecode(req.cookies.token);
             if (decode === null) return res.status(401).json({error: 'Unauthorized'});
-            try {
-                const loadNotepadResult = await db.Notepad.findOne({
-                    where: {name: args.name}
-                });
-                return res.send(JSON.stringify(loadNotepadResult));
-            } catch (err) {
-                return res.send('False');
-            }
+
+            const loadNotepadResult = await db.Notepad.findOne({
+                where: {name: args.name}
+            })
+
+            return JSON.stringify(loadNotepadResult.dataValues);
         },
+        // TODO : 여기도 load와 같은 문제 있음 (ERR_HTTP_HEADERS_SENT)
         deleteNotepad: async (parent, args, context) => {
             const {req, res} = context
             const decode = tokenDecode(req.cookies.token);
@@ -92,7 +90,7 @@ const resolvers = {
                 active: 0
             }, {where: {user_id: decode.ID}});
 
-            return res.send('OK');
+            return 'OK';
         }
     },
     Mutation: {
