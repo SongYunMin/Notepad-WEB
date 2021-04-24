@@ -54,7 +54,7 @@ export default {
           ID: ID
         }
       })
-      if (result.data.idCheck === 'False') {
+      if (result.data.idCheck === false) {
         alert('이미 존재하는 아이디입니다.')
         this.flag = 0
       } else {
@@ -84,7 +84,7 @@ export default {
           nickname: this.nick,
         }
       })
-      if (result.data.newAccount === 'OK') {
+      if (result.data.newAccount === true) {
         alert('회원 가입에 성공하였습니다.')
         this.$emit('back')
         return 1

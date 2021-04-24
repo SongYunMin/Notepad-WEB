@@ -87,8 +87,8 @@ export default {
         }
       })
 
-      if(result.data.saveNotepad === 'False'){
-        alert('세션이 만료되었습니다. 다시 로그인해주세요.')
+      if(result.data.saveNotepad === false){
+        alert('세션이 만료되었거나 잘못된 접근입니다. 로그아웃 합니다.')
         this.back(0)
       }
       this.saveTitle = this.currentPage.name
@@ -101,7 +101,7 @@ export default {
     },
     async removeTab (index, notepadName) {
       const result = await this.$apollo.mutate({
-        query: gql`mutation deleteNotepad($name: String, $count: Int){
+        mutation: gql`mutation deleteNotepad($name: String, $count: Int){
             deleteNotepad(name: $name, count: $count)
         }`,
         variables: {
@@ -110,9 +110,11 @@ export default {
         }
       })
 
-      if(result.data.deleteNotepad === 'OK'){
+      if(result.data.deleteNotepad === true){
         this.list.splice(index, 1)
         return alert('삭제 완료')
+      }else{
+        return alert('삭제 실패')
       }
     },
     back (number) {

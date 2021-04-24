@@ -37,8 +37,8 @@ export default {
     },
     async signIn () {
       // TODO : 쿠키 확인 후 있으면 Monitor
-      const result = await this.$apollo.mutate({
-          mutation: gql`mutation login($id: String, $pw: String){
+      const result = await this.$apollo.query({
+          query: gql`query login($id: String, $pw: String){
             login(id: $id, pw:$pw)
         }`,
         variables: {
@@ -46,7 +46,7 @@ export default {
           pw: this.PW
         }
       })
-      if (result.data.login === 'False') {
+      if (result.data.login === false) {
         alert('아이디와 패스워드가 일치하지 않습니다.')
       } else {
         alert(`로그인 되었습니다.`)

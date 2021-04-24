@@ -28,31 +28,13 @@ const resolvers = {
                 const result = await db.User.findAll({attributes: ['ID']});
                 for (const node of result) {
                     if (node.ID === args.ID) {
-                        return 'False';
+                        return false;
                     }
                 }
-                return 'OK';
+                return true;
             } catch (err) {
                 throw err;
             }
-        }
-    },
-    Mutation: {
-        newAccount: async (parent, args) => {
-            const salt = await crypto.randomBytes(64).toString('base64');
-            const scryptPromise = await promisify(crypto.scrypt);
-            const key = await scryptPromise(args.pw, salt, 64);
-            if (key) {
-                db.User.create({
-                    ID: args.ID,
-                    password: key.toString('base64'),
-                    nickname: args.nickname,
-                    salt: salt
-                }).catch(err => {
-                    return err
-                });
-            }
-            return 'OK';
         },
         // TODO : Session - File - Store 에서 값을 가져오면?
         login: async (parent, args, context) => {
@@ -71,10 +53,29 @@ const resolvers = {
                     // console.log("헤더 : ", req.headers);
                     res.cookie('token', token);
 
-                    return node.nickname.toString();
+                    return true;
                 }
             }
-            return 'False';
+            return false;
+        },
+    },
+    Mutation: {
+        newAccount: async (parent, args) => {
+            const salt = await crypto.randomBytes(64).toString('base64');
+            const scryptPromise = await promisify(crypto.scrypt);
+            const key = await scryptPromise(args.pw, salt, 64);
+            if (key) {
+                // TODO : async 로 일관성 있게 바꿔보자
+                db.User.create({
+                    ID: args.ID,
+                    password: key.toString('base64'),
+                    nickname: args.nickname,
+                    salt: salt
+                }).catch(err => {
+                    return false
+                });
+            }
+            return true;
         },
     }
 }

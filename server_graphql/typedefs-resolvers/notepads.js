@@ -61,7 +61,7 @@ const resolvers = {
             }
             return JSON.stringify(initData);
         },
-        loadNotepad: async(parent, args, context) => {
+        loadNotepad: async (parent, args, context) => {
             const {req, res} = context;
             const decode = tokenDecode(req.cookies.token);
             if (decode === null) return res.status(401).json({error: 'Unauthorized'});
@@ -77,14 +77,8 @@ const resolvers = {
         saveNotepad: async (parent, args, context) => {
             const {req, res} = context
             const decode = tokenDecode(req.cookies.token);
-            if (decode === null) return res.status(401).json({error: 'Unauthorized'});
-
-            if (args.name.indexOf('../') !== -1) {
-                return res.send('Unable to access.');
-            }
-            if (decode.ID === null) {
-                return res.send('False');
-            }
+            // 토큰이 존재하지 않을 경우 OR 잘못된 접근일 경우
+            if (decode === null || args.name.indexOf('../') !== -1) return false;
 
             const USER_SESSION_DATA = {
                 user_id: decode.ID,
@@ -131,17 +125,14 @@ const resolvers = {
                 throw err;
             });
 
-            return 'OK';
+            return true;
         },
         // TODO : 여기도 load와 같은 문제 있음 (ERR_HTTP_HEADERS_SENT)
         deleteNotepad: async (parent, args, context) => {
             const {req, res} = context
             const decode = tokenDecode(req.cookies.token);
-            if (decode === null) return res.status(401).json({error: 'Unauthorized'});
+            if (decode === null) return false
 
-            await db.Notepad.findOne({
-                where: {name: args.name}
-            })
             await db.Notepad.destroy({
                 where: {name: args.name}
             })
@@ -150,7 +141,7 @@ const resolvers = {
                 active: 0
             }, {where: {user_id: decode.ID}});
 
-            return 'OK';
+            return true;
         }
     }
 }
