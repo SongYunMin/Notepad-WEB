@@ -2,10 +2,10 @@ const {gql} = require('apollo-server')
 
 const typeDefs = gql`
     type Query{
-        idCheck(ID: String): String
+        idCheck(ID: String): Boolean
         initCheck(ID: String): String
         loadNotepad(name: String): String
-        deleteNotepad(name: String, count: Int): String
+
     }
 `
 

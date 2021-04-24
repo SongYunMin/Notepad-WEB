@@ -56,7 +56,7 @@ const resolvers = {
         },
         // TODO : Session - File - Store 에서 값을 가져오면?
         login: async (parent, args, context) => {
-            const {res} = context
+            const {req, res} = context
             const result = await db.User.findAll({attributes: ['ID', 'password', 'nickname', 'salt']});
             const scryptPromise = promisify(crypto.scrypt);
             for (const node of result) {
@@ -67,7 +67,10 @@ const resolvers = {
                     }, SECRET_KEY, {
                         expiresIn: 6000
                     });
+                    // req.headers['authorization'] = token;
+                    // console.log("헤더 : ", req.headers);
                     res.cookie('token', token);
+
                     return node.nickname.toString();
                 }
             }

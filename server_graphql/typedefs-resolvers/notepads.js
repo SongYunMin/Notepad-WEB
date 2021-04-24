@@ -61,7 +61,6 @@ const resolvers = {
             }
             return JSON.stringify(initData);
         },
-        // TODO : ERR_HTTP_HEADERS_SENT
         loadNotepad: async(parent, args, context) => {
             const {req, res} = context;
             const decode = tokenDecode(req.cookies.token);
@@ -72,25 +71,6 @@ const resolvers = {
             })
 
             return JSON.stringify(loadNotepadResult.dataValues);
-        },
-        // TODO : 여기도 load와 같은 문제 있음 (ERR_HTTP_HEADERS_SENT)
-        deleteNotepad: async (parent, args, context) => {
-            const {req, res} = context
-            const decode = tokenDecode(req.cookies.token);
-            if (decode === null) return res.status(401).json({error: 'Unauthorized'});
-
-            await db.Notepad.findOne({
-                where: {name: args.name}
-            })
-            await db.Notepad.destroy({
-                where: {name: args.name}
-            })
-            await db.User_SESSION.update({
-                count: args.count,
-                active: 0
-            }, {where: {user_id: decode.ID}});
-
-            return 'OK';
         }
     },
     Mutation: {
@@ -150,6 +130,25 @@ const resolvers = {
             }).catch(err => {
                 throw err;
             });
+
+            return 'OK';
+        },
+        // TODO : 여기도 load와 같은 문제 있음 (ERR_HTTP_HEADERS_SENT)
+        deleteNotepad: async (parent, args, context) => {
+            const {req, res} = context
+            const decode = tokenDecode(req.cookies.token);
+            if (decode === null) return res.status(401).json({error: 'Unauthorized'});
+
+            await db.Notepad.findOne({
+                where: {name: args.name}
+            })
+            await db.Notepad.destroy({
+                where: {name: args.name}
+            })
+            await db.User_SESSION.update({
+                count: args.count,
+                active: 0
+            }, {where: {user_id: decode.ID}});
 
             return 'OK';
         }

@@ -100,8 +100,8 @@ export default {
       this.currentShowPage = index
     },
     async removeTab (index, notepadName) {
-      const result = await this.$apollo.query({
-        query: gql`query deleteNotepad($name: String, $count: Int){
+      const result = await this.$apollo.mutate({
+        query: gql`mutation deleteNotepad($name: String, $count: Int){
             deleteNotepad(name: $name, count: $count)
         }`,
         variables: {
@@ -114,22 +114,6 @@ export default {
         this.list.splice(index, 1)
         return alert('삭제 완료')
       }
-      //
-      // const response = await fetch(`http://localhost:3000/notepad/delete?data=${JSON.stringify(data)}`, {
-      //   mode: 'cors',
-      //   credentials: 'include',
-      //   method: 'GET',
-      //   headers: {'Content-Type': 'application/json'}
-      // })
-      // if (response.status === 200) {
-      //   const result = await response.json()
-      //   if (result.result === 'OK') {
-      //     this.list.splice(index, 1)
-      //     return alert('삭제 완료')
-      //   } else {
-      //     return alert('삭제 오류!')
-      //   }
-      // }
     },
     back (number) {
       this.$emit('back', number)
