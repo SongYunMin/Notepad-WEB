@@ -82,9 +82,6 @@ const resolvers = {
                     tab: node.tab
                 });
             }
-            // return JSON.stringify(initData);
-            console.log(initUserSessionResult.dataValues);
-            console.log(initData.notepad);
             return {
                 User_Data: initUserSessionResult.dataValues,
                 Notepads: initData.notepad

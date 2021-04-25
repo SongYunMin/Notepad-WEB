@@ -63,21 +63,22 @@ export default {
           ID: 'secret'
         }
       })
-      // this.initData = result.data.initCheck
-      console.log("리설트!:", result.data);
+      console.log("리설트!:", result.data.initCheck);
+      this.initData = result.data.initCheck;
+
       this.initialize()
     },
     initialize () {
-      const init = JSON.parse(this.initData);
-      console.log("초기 데이터 : ", init)
-      if (init.DATA === 'DATA_NOT_FOUND') {
+      console.log("초기 데이터: ", this.initData)
+      // TODO : 데이터
+      if (this.initData.DATA === 'DATA_NOT_FOUND') {
       } else {
-        for (let i = 0; i < init.count; i++) {
+        for (let i = 0; i < this.initData.User_Data.count; i++) {
           this.addTab()
         }
-        for (let i = 0; i < init.notepad.length; i++) {
-          this.list[init.notepad[i].tab].name = init.notepad[i].name
-          this.list[init.notepad[i].tab].memo = init.notepad[i].memo
+        for (let i = 0; i < this.initData.Notepads.length; i++) {
+          this.list[this.initData.Notepads[i].tab].name = this.initData.Notepads[i].name
+          this.list[this.initData.Notepads[i].tab].memo = this.initData.Notepads[i].memo
         }
       }
     },
