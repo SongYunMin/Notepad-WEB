@@ -93,11 +93,18 @@ const resolvers = {
             const decode = tokenDecode(req.cookies.token);
             if (decode === null) return res.status(401).json({error: 'Unauthorized'});
 
-            const loadNotepadResult = await db.Notepad.findOne({
-                where: {name: args.name}
-            })
+            try {
+                const loadNotepadResult = await db.Notepad.findOne({
+                    where: {name: args.name}
+                })
+                console.log("Load Notepad : ", loadNotepadResult.dataValues);
+                return loadNotepadResult.dataValues;
+            } catch(err) {
+                console.log("실패! ", err);
+                return {name : "DATA_NOT_FOUND"}
+            }
 
-            return JSON.stringify(loadNotepadResult.dataValues);
+
         }
     },
     Mutation: {

@@ -23,20 +23,23 @@ export default {
       const result = await this.$apollo.query({
         query: gql`
         query loadNotepad($name: String!){
-            loadNotepad(name: $name)
+            loadNotepad(name: $name){
+                name
+                memo
+            }
         }`,
         variables: {
           name: search
         }
       })
-
-      if(result.data.loadNotepad === 'False'){
-        alert('저장된 메모가 없습니다.')
+      console.log('반환 값 : ', result.data);
+      // TODO : ERROR HANDLING 필요
+      if(result.data.loadNotepad.ERROR === 'DATA_NOT_FOUND'){
+        return alert('저장된 메모가 없습니다.')
       }
-      const resultData = JSON.parse(result.data.loadNotepad)
       this.$emit('load-tab', {
-        name: resultData.name,
-        memo: resultData.memo
+        name: result.data.loadNotepad.name,
+        memo: result.data.loadNotepad.memo
       })
     },
     async logout() {

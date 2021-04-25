@@ -63,14 +63,10 @@ export default {
           ID: 'secret'
         }
       })
-      console.log("리설트!:", result.data.initCheck);
       this.initData = result.data.initCheck;
-
       this.initialize()
     },
     initialize () {
-      console.log("초기 데이터: ", this.initData)
-      // TODO : 데이터
       if (this.initData.DATA === 'DATA_NOT_FOUND') {
       } else {
         for (let i = 0; i < this.initData.User_Data.count; i++) {

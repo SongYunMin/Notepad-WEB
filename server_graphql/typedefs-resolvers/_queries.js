@@ -20,8 +20,7 @@ const typeDefs = gql`
         
         loadNotepad(
             name: String!
-        ): String!
-        
+        ): Notepad
     }
 `
 
