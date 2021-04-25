@@ -46,7 +46,7 @@ export default {
   methods: {
     async idCheck (ID) {
       const result = await this.$apollo.query({
-        query: gql`query idCheck($ID: String){
+        query: gql`query idCheck($ID: String!){
             idCheck(ID: $ID)
         }`,
         // Parameters

@@ -38,7 +38,7 @@ export default {
     async signIn () {
       // TODO : 쿠키 확인 후 있으면 Monitor
       const result = await this.$apollo.query({
-          query: gql`query login($id: String, $pw: String){
+          query: gql`query login($id: String!, $pw: String!){
             login(id: $id, pw:$pw)
         }`,
         variables: {

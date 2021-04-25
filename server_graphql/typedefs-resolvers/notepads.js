@@ -11,7 +11,13 @@ const typeDefs = gql`
         name: String
         memo: String
         tab: Int!
-    }
+    },
+    
+    type InitData {
+        User_Data: User_Session,
+        Notepads: [Notepad]
+    },
+    
 `
 
 function tokenDecode(token) {
@@ -24,8 +30,24 @@ function tokenDecode(token) {
 
 const resolvers = {
     Query: {
+        // TODO : Asynchronous Architecture
+        init: async (parent, args, context) => {
+            const {req, res} = context;
+            const decode = tokenDEcode(req.cookies.token);
+            if(decode === null) return res.status(401).text('Unauthorized');
+            if(decode.ID) {
+                console.log("Session... OK");
+            }else{
+                return 'False'
+            }
+
+            const initUserSessionResult = await db.User_SESSION.findOne({
+                where: {user_id: decode.ID}
+            })
+        },
         initCheck: async (parent, args, context) => {
             const {req, res} = context;
+            console.log(req);
             const decode = tokenDecode(req.cookies.token);
             if (decode === null) return res.status(401).text('Unauthorized');
             if (decode.ID) {       // 사용자 데이터(Session)가 있다면
@@ -41,6 +63,7 @@ const resolvers = {
             const initNotepadResult = await db.Notepad.findAll({
                 where: {user_id: decode.ID}
             })
+            console.log("Notepad Data : ", initNotepadResult);
 
             if (initUserSessionResult === null || initNotepadResult === null) {
                 return JSON.stringify({DATA: "DATA_NOT_FOUND"});
@@ -56,10 +79,17 @@ const resolvers = {
                 initData.notepad.push({
                     name: node.name,
                     memo: node.memo,
-                    index: node.tab
+                    tab: node.tab
                 });
             }
-            return JSON.stringify(initData);
+            // return JSON.stringify(initData);
+            console.log(initUserSessionResult.dataValues);
+            console.log(initData.notepad);
+            return {
+                User_Data: initUserSessionResult.dataValues,
+                Notepads: initData.notepad
+            }
+
         },
         loadNotepad: async (parent, args, context) => {
             const {req, res} = context;

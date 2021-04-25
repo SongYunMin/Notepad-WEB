@@ -46,14 +46,25 @@ export default {
     async checkSessionRequest () {
       const result = await this.$apollo.query({
         query: gql`
-        query initCheck($ID: String){
-            initCheck(ID: $ID)
+        query initCheck($ID: String) {
+            initCheck(ID: $ID){
+                User_Data{
+                    count
+                    active
+                }
+                Notepads{
+                    name
+                    memo
+                    tab
+                }
+            }
         }`,
         variables: {
           ID: 'secret'
         }
       })
-      this.initData = result.data.initCheck
+      // this.initData = result.data.initCheck
+      console.log("리설트!:", result.data);
       this.initialize()
     },
     initialize () {
@@ -65,8 +76,8 @@ export default {
           this.addTab()
         }
         for (let i = 0; i < init.notepad.length; i++) {
-          this.list[init.notepad[i].index].name = init.notepad[i].name
-          this.list[init.notepad[i].index].memo = init.notepad[i].memo
+          this.list[init.notepad[i].tab].name = init.notepad[i].name
+          this.list[init.notepad[i].tab].memo = init.notepad[i].memo
         }
       }
     },
