@@ -30,8 +30,8 @@ export default {
     current: Object
   },
   methods: {
-    removeTab (index, notepadName) {
-      this.$emit('remove-tab', index, notepadName)
+    removeTab (index, notepadNumber, notepadName) {
+      this.$emit('remove-tab', index, notepadNumber, notepadName)
     },
     showTab (index) {
       this.$emit('show-tab', index)

@@ -53,6 +53,7 @@ export default {
                     active
                 }
                 Notepads{
+                    number
                     name
                     memo
                     tab
@@ -72,14 +73,17 @@ export default {
         for (let i = 0; i < this.initData.User_Data.count; i++) {
           this.addTab()
         }
+        // TODO : Index에 맞게 업데이트 되기 때문에 중복 값 에러 안남
         for (let i = 0; i < this.initData.Notepads.length; i++) {
           this.list[this.initData.Notepads[i].tab].name = this.initData.Notepads[i].name
           this.list[this.initData.Notepads[i].tab].memo = this.initData.Notepads[i].memo
+          this.list[this.initData.Notepads[i].tab].number = this.initData.Notepads[i].number
         }
+        console.log(this.list);
       }
     },
     addTab () {
-      this.list.push({name: '', memo: '', index: this.count++})
+      this.list.push({number: '', name: '', memo: '', index: this.count++})
     },
     async saveTab () {
       const result = await this.$apollo.mutate({
@@ -98,21 +102,25 @@ export default {
       if(result.data.saveNotepad === false){
         alert('세션이 만료되었거나 잘못된 접근입니다. 로그아웃 합니다.')
         this.back(0)
+      }else{
+        alert('저장 완료')
       }
       this.saveTitle = this.currentPage.name
     },
     loadTab (data) {
-      this.list.push({name: data.name, memo: data.memo, index: this.count++})
+      this.list.push({number: data.number, name: data.name, memo: data.memo, index: this.count++})
+      this.saveTab();
     },
     showTab (index) {
       this.currentShowPage = index
     },
-    async removeTab (index, notepadName) {
+    async removeTab (index, notepadNumber, notepadName) {
       const result = await this.$apollo.mutate({
-        mutation: gql`mutation deleteNotepad($name: String, $count: Int){
-            deleteNotepad(name: $name, count: $count)
+        mutation: gql`mutation deleteNotepad($number: Int, $name: String, $count: Int){
+            deleteNotepad(number: $number, name: $name, count: $count)
         }`,
         variables: {
+          number: notepadNumber,
           name: notepadName,
           count: --this.count
         }

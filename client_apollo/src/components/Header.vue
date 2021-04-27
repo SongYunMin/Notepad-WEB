@@ -24,6 +24,7 @@ export default {
         query: gql`
         query loadNotepad($name: String!){
             loadNotepad(name: $name){
+                number
                 name
                 memo
             }
@@ -38,12 +39,13 @@ export default {
         return alert('저장된 메모가 없습니다.')
       }
       this.$emit('load-tab', {
+        number: result.data.loadNotepad.number,
         name: result.data.loadNotepad.name,
         memo: result.data.loadNotepad.memo
       })
     },
     async logout() {
-      document.cookie = 'token' + '=; expires=Thu, 01 Jan 1970 00:00:10 GMT;';
+      localStorage.removeItem('token');
       alert('로그아웃 되었습니다.');
       this.$emit('back', 0);
     },

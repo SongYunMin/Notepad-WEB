@@ -14,6 +14,7 @@ const typeDefs = gql`
             activeIndex: Int
         ): Boolean!
         deleteNotepad(
+            number: Int,
             name: String, 
             count: Int
         ): Boolean!

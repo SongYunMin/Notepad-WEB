@@ -5,18 +5,15 @@ const typeDefs = gql`
         idCheck(
             ID: String!
         ): Boolean!
+        
         login(
             id: String!, 
             pw: String!
-        ): Boolean!
+        ): String!
         
         initCheck(
             ID: String
         ): InitData
-        
-        init(
-            ID: String
-        ): InitData!
         
         loadNotepad(
             name: String!

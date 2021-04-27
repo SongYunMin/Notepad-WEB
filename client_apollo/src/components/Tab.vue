@@ -12,12 +12,12 @@ export default {
   data () {
     return {
       index: Number(new Date() % 10000),
+      tabNumber: 0,
       memo: null
     }
   },
   props: {
     tabIndex: Number,
-    saveTitle: String,
     current: Object,
     item: Object
   },
@@ -26,7 +26,7 @@ export default {
       return this.index
     },
     closeTab () {
-      this.$emit('remove-tab', this.tabIndex, this.item.name)
+      this.$emit('remove-tab', this.tabIndex, this.item.number, this.item.name)
     },
     showTab () {
       this.$emit('show-tab', this.tabIndex)

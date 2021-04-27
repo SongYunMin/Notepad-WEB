@@ -36,27 +36,20 @@ const resolvers = {
                 throw err;
             }
         },
-        // TODO : Session - File - Store 에서 값을 가져오면?
-        login: async (parent, args, context) => {
-            const {req, res} = context
+        login: async (parent, args) => {
             const result = await db.User.findAll({attributes: ['ID', 'password', 'nickname', 'salt']});
             const scryptPromise = promisify(crypto.scrypt);
             for (const node of result) {
                 const key = await scryptPromise(args.pw, node.salt, 64);
                 if (key && node.ID === args.id && node.password === key.toString('base64')) {
-                    const token = jwt.sign({
+                    return jwt.sign({
                         ID: args.id
                     }, SECRET_KEY, {
                         expiresIn: 6000
                     });
-                    // req.headers['authorization'] = token;
-                    // console.log("헤더 : ", req.headers);
-                    res.cookie('token', token);
-
-                    return true;
                 }
             }
-            return false;
+            return 'False';
         },
     },
     Mutation: {
@@ -65,15 +58,12 @@ const resolvers = {
             const scryptPromise = await promisify(crypto.scrypt);
             const key = await scryptPromise(args.pw, salt, 64);
             if (key) {
-                // TODO : async 로 일관성 있게 바꿔보자
                 db.User.create({
                     ID: args.ID,
                     password: key.toString('base64'),
                     nickname: args.nickname,
                     salt: salt
-                }).catch(err => {
-                    return false
-                });
+                })
             }
             return true;
         },

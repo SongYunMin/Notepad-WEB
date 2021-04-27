@@ -1,6 +1,7 @@
 const {gql} = require('apollo-server')
 const db = require('../models')
 const jwt = require('jsonwebtoken')
+const {Op} = require('sequelize')
 
 const SECRET_KEY = process.env.SECRET_KEY
 
@@ -17,7 +18,6 @@ const typeDefs = gql`
         User_Data: User_Session,
         Notepads: [Notepad]
     },
-    
 `
 
 function tokenDecode(token) {
@@ -30,31 +30,11 @@ function tokenDecode(token) {
 
 const resolvers = {
     Query: {
-        // TODO : Asynchronous Architecture
-        init: async (parent, args, context) => {
-            const {req, res} = context;
-            const decode = tokenDEcode(req.cookies.token);
-            if(decode === null) return res.status(401).text('Unauthorized');
-            if(decode.ID) {
-                console.log("Session... OK");
-            }else{
-                return 'False'
-            }
-
-            const initUserSessionResult = await db.User_SESSION.findOne({
-                where: {user_id: decode.ID}
-            })
-        },
         initCheck: async (parent, args, context) => {
             const {req, res} = context;
-            console.log(req);
-            const decode = tokenDecode(req.cookies.token);
-            if (decode === null) return res.status(401).text('Unauthorized');
-            if (decode.ID) {       // 사용자 데이터(Session)가 있다면
-                console.log("Session...OK");
-            } else {                      // 세션이 없는데 Notepad 접근 시
-                return 'False';
-            }
+            const decode = tokenDecode(req.headers['authorization'].split(' ')[1]);
+
+            if (!decode.ID) return 'False';
 
             const initUserSessionResult = await db.User_SESSION.findOne({
                 where: {user_id: decode.ID}
@@ -63,7 +43,6 @@ const resolvers = {
             const initNotepadResult = await db.Notepad.findAll({
                 where: {user_id: decode.ID}
             })
-            console.log("Notepad Data : ", initNotepadResult);
 
             if (initUserSessionResult === null || initNotepadResult === null) {
                 return JSON.stringify({DATA: "DATA_NOT_FOUND"});
@@ -77,6 +56,7 @@ const resolvers = {
 
             for (const node of initNotepadResult) {
                 initData.notepad.push({
+                    number: node.number,
                     name: node.name,
                     memo: node.memo,
                     tab: node.tab
@@ -90,17 +70,15 @@ const resolvers = {
         },
         loadNotepad: async (parent, args, context) => {
             const {req, res} = context;
-            const decode = tokenDecode(req.cookies.token);
-            if (decode === null) return res.status(401).json({error: 'Unauthorized'});
+            const decode = tokenDecode(req.headers['authorization'].split(' ')[1]);
+            if (decode === null) return {name: "TOKEN_NOT_FOUND"}
 
             try {
                 const loadNotepadResult = await db.Notepad.findOne({
                     where: {name: args.name}
                 })
-                console.log("Load Notepad : ", loadNotepadResult.dataValues);
                 return loadNotepadResult.dataValues;
             } catch(err) {
-                console.log("실패! ", err);
                 return {name : "DATA_NOT_FOUND"}
             }
 
@@ -110,8 +88,7 @@ const resolvers = {
     Mutation: {
         saveNotepad: async (parent, args, context) => {
             const {req, res} = context
-            const decode = tokenDecode(req.cookies.token);
-            // 토큰이 존재하지 않을 경우 OR 잘못된 접근일 경우
+            const decode = tokenDecode(req.headers['authorization'].split(' ')[1]);
             if (decode === null || args.name.indexOf('../') !== -1) return false;
 
             const USER_SESSION_DATA = {
@@ -120,25 +97,21 @@ const resolvers = {
                 active: args.activeIndex
             }
 
-            console.log("유저 데이터 : ", USER_SESSION_DATA)
-
             const userSessionResult = await db.User_SESSION.findOne({where: {user_id: decode.ID}});
+
+            console.log(userSessionResult);
             if (userSessionResult === null) {
                 db.User_SESSION.create({
                     user_id: USER_SESSION_DATA.user_id,
                     count: USER_SESSION_DATA.count,
                     active: USER_SESSION_DATA.active
-                }).catch(err => {
-                    throw err;
-                });
+                })
             } else {
                 db.User_SESSION.update({
                         user_id: USER_SESSION_DATA.user_id,
                         count: USER_SESSION_DATA.count,
                         active: USER_SESSION_DATA.active
-                    }, {where: {user_id: USER_SESSION_DATA.user_id}}
-                ).catch(err => {
-                    throw err;
+                    }, {where: {user_id: USER_SESSION_DATA.user_id}
                 })
             }
 
@@ -149,26 +122,30 @@ const resolvers = {
                 tab: args.activeIndex
             }
 
-            // TODO : DATA UPDATE
             db.Notepad.create({
                 user_id: NOTEPAD_DATA.user_id,
                 name: NOTEPAD_DATA.name,
                 memo: NOTEPAD_DATA.memo,
                 tab: NOTEPAD_DATA.tab
-            }).catch(err => {
-                throw err;
-            });
+            })
 
             return true;
         },
-        // TODO : 여기도 load와 같은 문제 있음 (ERR_HTTP_HEADERS_SENT)
+        // TODO :
         deleteNotepad: async (parent, args, context) => {
             const {req, res} = context
-            const decode = tokenDecode(req.cookies.token);
-            if (decode === null) return false
+            const decode = tokenDecode(req.headers['authorization'].split(' ')[1]);
+            if (decode === null) return false;
+            console.log("삭제 인자 : ", args);
 
             await db.Notepad.destroy({
-                where: {name: args.name}
+                // where: {name: args.name}
+                where: {
+                    [Op.and]: [
+                        {name: args.name},
+                        {number: args.number}
+                    ]
+                }
             })
             await db.User_SESSION.update({
                 count: args.count,
