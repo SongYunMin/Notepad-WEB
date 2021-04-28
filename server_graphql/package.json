@@ -7,12 +7,13 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "start": "nodemon server.js",
-    "test" : "jest"
+    "test": "jest",
+    "unit": "jest ./__test__/user.test.js"
   },
   "dependencies": {
     "apollo-server": "^2.22.2",
-    "apollo-server-errors": "^2.5.0",
-    "apollo-server-express": "^2.22.2",
+    "apollo-server-express": "^2.23.0",
+    "apollo-server-testing": "^2.23.0",
     "body-parser": "^1.19.0",
     "connect": "^3.7.0",
     "connect-multiparty": "^2.2.0",
@@ -25,6 +26,8 @@
     "express-session": "^1.17.1",
     "fs": "^0.0.1-security",
     "graphql": "^15.5.0",
+    "graphql-request": "^3.4.0",
+    "jest-puppeteer": "^5.0.3",
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "mysql2": "^2.2.5",
@@ -41,9 +44,11 @@
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
     "babel-eslint": "^10.1.0",
+    "babel-jest": "^26.6.3",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0",
-    "jest": "^26.6.3"
+    "jest": "^26.6.3",
+    "regenerator-runtime": "^0.13.7"
   },
   "eslintConfig": {
     "root": true,
