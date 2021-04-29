@@ -63,4 +63,21 @@ describe("Notepad Test", () => {
         console.log("저장 결과 : ", result.data.saveNotepad);
         expect(result.data.saveNotepad).toBeTruthy()
     })
+
+    test("[Integration] Delete Notepad Test", async () => {
+        const mutation = modules.gql`
+            mutation deleteNotepad($number: Int, $name: String, $count: Int){
+                deleteNotepad(number: $number, name: $name, count: $count)
+            }
+        `
+        const variables = {
+            number: 4,
+            name: 'KnowreKorea',
+            count: 3
+        }
+
+        const result = await modules.mutate({mutation: mutation, variables: variables});
+        console.log("삭제 결과 : ", result.data.deleteNotepad);
+        expect(result.data.deleteNotepad).toBeTruthy()
+    })
 })
