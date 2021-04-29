@@ -12,7 +12,7 @@ console.log("유저 토큰 : ", process.env.TEST_TOKEN);
 describe("New Account Test", () =>{
     afterAll(async () => {
         console.log("서버 연결 해제");
-        await modules.serverDisconnect();
+        // await modules.serverDisconnect();
     })
     test("[Integration] ID Duplicate Test", async () => {
         const query = modules.gql`

@@ -1,14 +1,10 @@
 const modules = require('./test_setup');
 describe("Notepad Test", () => {
-    // beforeAll(()=>{
-    //     modules.server.apollo.context = (req) => {return {req}}
-    // })
     afterAll(async () => {
         await modules.serverDisconnect();
-
     })
+
     test("[Integration] Initialize Data Test", async () => {
-        // TODO : 토큰 정보 보내야 함
         const query = modules.gql`
             query initCheck($ID: String) {
                 initCheck(ID: $ID){
@@ -28,10 +24,43 @@ describe("Notepad Test", () => {
         const variables = {
             ID: 'secret'
         }
-        const result = await modules.query({query: query, variables: variables, http: {
-            headers: {'authorization' : `Bearer ${process.env.TEST_TOKEN}`}
-            }});
+        const result = await modules.query({query: query, variables: variables});
         console.log("초기화 결과 : ", result.data.initCheck);
         expect(result.data.initCheck).not.toEqual(null)
+    })
+
+    test("[Integration] Load Notepad Test", async () => {
+        const query = modules.gql`
+            query loadNotepad($name: String!){
+                loadNotepad(name: $name){
+                    number
+                    name
+                    memo
+                }
+            }
+        `
+        const variables = {
+            name: '송윤민'
+        }
+        const result = await modules.query({query: query, variables: variables})
+        console.log("로드 결과 : ", result.data.loadNotepad)
+        expect(result.data.loadNotepad).not.toBeFalsy()
+    })
+
+    test("[Integration] Save Notepad Test", async () => {
+        const query = modules.gql`
+            mutation saveNotepad($name: String, $memo: String, $count: Int, $activeIndex: Int){
+                saveNotepad(name: $name, memo: $memo, count: $count, activeIndex: $activeIndex)
+            }
+        `
+        const variables = {
+            name: "KnowreKorea",
+            memo: "Labs",
+            count: 4,
+            activeIndex: 4
+        }
+        const result = await modules.query({query: query, variables: variables});
+        console.log("저장 결과 : ", result.data.saveNotepad);
+        expect(result.data.saveNotepad).toBeTruthy()
     })
 })

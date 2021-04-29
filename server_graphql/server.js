@@ -41,13 +41,6 @@ const testServer = new ApolloServer({
 const apollo = new ApolloServer({
     typeDefs,
     resolvers,
-    // context: () => {
-    //     const {request: req} = require('express')
-    //     req.headers['authorization'] = `Bearer ${process.env.TEST_TOKEN}`
-    //     return {
-    //         req
-    //     }
-    // }
     context: ({req}) => {
         return {
             req
