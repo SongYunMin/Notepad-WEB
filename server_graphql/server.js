@@ -28,7 +28,6 @@ const resolvers = [
 const server = new ApolloServer({
     typeDefs,
     resolvers,
-    mocks: true,
     context: ({req, res}) => {
         return {
             req, res
@@ -42,7 +41,7 @@ server.applyMiddleware({
 })
 
 app.listen(3000, () => {
-    console.log("server start!");
+    console.log("server start!!!!!!!");
 })
 
 module.exports = server

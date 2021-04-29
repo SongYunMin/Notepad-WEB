@@ -3,7 +3,7 @@ const db = require('../models')
 const promisify = require('util').promisify;
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-require('dotenv').config()
+require('dotenv').config();
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
@@ -63,7 +63,7 @@ const resolvers = {
                     password: key.toString('base64'),
                     nickname: args.nickname,
                     salt: salt
-                })
+                }).catch(()=>{return false})
             }
             return true;
         },
