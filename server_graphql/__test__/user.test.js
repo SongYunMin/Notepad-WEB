@@ -3,6 +3,12 @@ const endpoint = 'http://localhost:3000/graphql'
 const jwt = require('jsonwebtoken')
 require('dotenv').config();
 
+function getToken() {
+    return process.env.TEST_TOKEN;
+}
+modules.server.apollo.context = () => ({bearerToken: `Bearer ${process.env.TEST_TOKEN}`})
+console.log("유저 토큰 : ", process.env.TEST_TOKEN);
+
 describe("New Account Test", () =>{
     afterAll(async () => {
         console.log("서버 연결 해제");
@@ -54,9 +60,13 @@ describe("New Account Test", () =>{
             pw: USER.pw
         }
         const result = await modules.query({query: query, variables: variables});
-        const token = jwt.sign({ID: USER.id}, SECRET_KEY, {expiresIn: 6000});
+        process.env.TEST_TOKEN = jwt.sign({ID: USER.id}, SECRET_KEY);
+        console.log("프로세스 토큰 : ", process.env.TEST_TOKEN);
+        const token = jwt.sign({ID: USER.id}, SECRET_KEY);
         console.log("로그인 결과 : ", result.data.login);
         expect(result.data.login).toEqual(token);
 
     })
 })
+
+// module.exports = token

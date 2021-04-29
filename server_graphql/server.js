@@ -26,10 +26,33 @@ const resolvers = [
     notepads.resolvers
 ]
 
+const testServer = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: () => {
+        const {request: req} = require('express')
+        req.headers['authorization'] = `Bearer ${process.env.TEST_TOKEN}`
+        return {
+            req
+        }
+    }
+})
+
 const apollo = new ApolloServer({
     typeDefs,
     resolvers,
-    context: ({req}) => ({bearerToken: req.headers["authorization"]})
+    // context: () => {
+    //     const {request: req} = require('express')
+    //     req.headers['authorization'] = `Bearer ${process.env.TEST_TOKEN}`
+    //     return {
+    //         req
+    //     }
+    // }
+    context: ({req}) => {
+        return {
+            req
+        }
+    }
 })
 
 apollo.applyMiddleware({
@@ -45,4 +68,4 @@ const disconnect = () => {
     connect.close();
 }
 
-module.exports = {apollo, app, disconnect}
+module.exports = {apollo, app, disconnect, testServer}

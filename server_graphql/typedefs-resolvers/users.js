@@ -42,11 +42,9 @@ const resolvers = {
             for (const node of result) {
                 const key = await scryptPromise(args.pw, node.salt, 64);
                 if (key && node.ID === args.id && node.password === key.toString('base64')) {
-                    return jwt.sign({
-                        ID: args.id
-                    }, SECRET_KEY, {
-                        expiresIn: 6000
-                    });
+                    const token = jwt.sign({ID:args.id}, SECRET_KEY)
+                    process.env.TEST_TOKEN = token;
+                    return token;
                 }
             }
             return 'False';
