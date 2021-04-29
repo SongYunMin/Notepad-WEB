@@ -4,6 +4,10 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config();
 
 describe("New Account Test", () =>{
+    afterAll(async () => {
+        console.log("서버 연결 해제");
+        await modules.serverDisconnect();
+    })
     test("[Integration] ID Duplicate Test", async () => {
         const query = modules.gql`
             query idCheck($ID: String!){

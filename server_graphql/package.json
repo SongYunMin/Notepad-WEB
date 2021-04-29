@@ -7,8 +7,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "start": "nodemon server.js",
-    "test": "jest",
-    "unit": "jest ./__test__/user.test.js"
+    "test": "jest --forceExit --detectOpenHandles  --watchAll --maxWorkers=1"
   },
   "dependencies": {
     "apollo-server": "^2.22.2",

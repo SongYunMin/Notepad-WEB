@@ -6,6 +6,7 @@ const mutations = require('./typedefs-resolvers/_mutations')
 const users = require('./typedefs-resolvers/users')
 const notepads = require('./typedefs-resolvers/notepads')
 const cookieParser = require('cookie-parser')
+const port = 3000
 
 const corsOption = {
     origin: 'http://localhost:8080',
@@ -25,23 +26,23 @@ const resolvers = [
     notepads.resolvers
 ]
 
-const server = new ApolloServer({
+const apollo = new ApolloServer({
     typeDefs,
     resolvers,
-    context: ({req, res}) => {
-        return {
-            req, res
-        }
-    }
+    context: ({req}) => ({bearerToken: req.headers["authorization"]})
 })
 
-server.applyMiddleware({
+apollo.applyMiddleware({
     app,
     cors: corsOption
 })
 
-app.listen(3000, () => {
-    console.log("server start!!!!!!!");
+const connect = app.listen(port, () => {
+    console.log("server start");
 })
 
-module.exports = server
+const disconnect = () => {
+    connect.close();
+}
+
+module.exports = {apollo, app, disconnect}

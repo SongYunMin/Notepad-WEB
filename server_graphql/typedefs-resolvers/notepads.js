@@ -31,8 +31,8 @@ function tokenDecode(token) {
 const resolvers = {
     Query: {
         initCheck: async (parent, args, context) => {
-            const {req, res} = context;
-            const decode = tokenDecode(req.headers['authorization'].split(' ')[1]);
+            console.log(context.bearerToken);
+            const decode = tokenDecode(context.bearerToken.split(' ')[1]);
 
             if (!decode.ID) return 'False';
 
@@ -69,8 +69,7 @@ const resolvers = {
 
         },
         loadNotepad: async (parent, args, context) => {
-            const {req, res} = context;
-            const decode = tokenDecode(req.headers['authorization'].split(' ')[1]);
+            const decode = tokenDecode(context.bearerToken.split(' ')[1]);
             if (decode === null) return {name: "TOKEN_NOT_FOUND"}
 
             try {
@@ -87,8 +86,7 @@ const resolvers = {
     },
     Mutation: {
         saveNotepad: async (parent, args, context) => {
-            const {req, res} = context
-            const decode = tokenDecode(req.headers['authorization'].split(' ')[1]);
+            const decode = tokenDecode(context.bearerToken.split(' ')[1]);
             if (decode === null || args.name.indexOf('../') !== -1) return false;
 
             const USER_SESSION_DATA = {
@@ -133,8 +131,7 @@ const resolvers = {
         },
         // TODO :
         deleteNotepad: async (parent, args, context) => {
-            const {req, res} = context
-            const decode = tokenDecode(req.headers['authorization'].split(' ')[1]);
+            const decode = tokenDecode(context.bearerToken.split(' ')[1]);
             if (decode === null) return false;
             console.log("삭제 인자 : ", args);
 
