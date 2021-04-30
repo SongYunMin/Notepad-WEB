@@ -1,8 +1,8 @@
 const path = require('path');
 
-const snapshot = async (title) => {
+const snapshot = async (subject) => {
     await page.screenshot({
-        path: path.join(__dirname, 'screenshot', `${ title }.jpg`),
+        path: path.join(__dirname, 'screenshot', `${ subject }.jpg`),
         fullPage: true,
         type: 'jpeg'
     });

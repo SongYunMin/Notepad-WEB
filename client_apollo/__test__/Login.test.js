@@ -1,28 +1,33 @@
-// import {shallowMount} from "@vue/test-utils";
-// import Login from '../src/components/Login'
-// const Login = require('../src/components/Login')
-// const {shallowMount} = require('@vue/test-utils')
-const {snapshot} = require('./display')
+const {snapshot} = require('./screen');
+const puppeteer = require('puppeteer');
 
-describe('Google', () => {
+describe("Login Test", () => {
     beforeAll(async () => {
-        await page.goto('https://google.com');
-
+        await page.goto('http://localhost:8080', { waitUntil: 'domcontentloaded' });
     });
+    test("Login Logout Test", async () => {
+        const browser = await puppeteer.launch({
+            headless: false
+        })
+        const page = await browser.newPage();
+        await page.goto('http://localhost:8080', {
+            waitUntil: "domcontentloaded"
+        });
+        const idInput = '.idInput';
+        const pwInput = '.pwInput';
+        const submit = '.signIn';
 
-    test('should be titled "Google"', async () => {
-        await expect(page.title()).resolves.toMatch('Google');
+        await page.type(idInput, "1234");
+        await page.type(pwInput, "1234");
+        await page.click(submit);
+
+        await snapshot('login-Test');
+        const login = await page.on("dialog", async (dialog) => {
+            await dialog.dismiss();
+            return dialog.message()
+        })
+        if(login === '로그인 되었습니다.'){
+            expect(true).toBe(true);
+        }
     })
 })
-
-describe('Title test', () => {
-    beforeAll(async () => {
-        await page.goto('http://localhost:8080');
-        await snapshot('Main-Page');
-    });
-
-    it('Title Test', async () => {
-        const title = await page.title();
-        expect(title).toEqual('client');
-    });
-});

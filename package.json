@@ -1,55 +1,63 @@
 {
-  "name": "notepad-vue",
-  "version": "0.1.0",
+  "name": "client_webpack",
+  "version": "1.0.0",
+  "description": "A Vue.js project",
+  "author": "Song-YunMin <thd930308@naver.com>",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "test": "jest"
+    "dev": "webpack-dev-server --inline --progress --config webpack.config.js",
+    "start": "npm run dev",
+    "unit": "jest --config test/unit/jest.conf.js --coverage",
+    "test": "npm run unit",
+    "lint": "eslint --ext .js,.vue src test/unit",
+    "build": "node build/build.js"
   },
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "connect-multiparty": "^2.2.0",
-    "core-js": "^3.6.5",
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "express-session": "^1.17.1",
-    "fs": "^0.0.1-security",
-    "mysql": "^2.18.1",
-    "mysql2": "^2.2.5",
-    "nodemon": "^2.0.7",
-    "path": "^0.12.7",
-    "sequelize": "^6.6.2",
-    "session": "^0.1.0",
-    "session-file-store": "^1.5.0"
+    "@apollo/client": "^3.3.14",
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-transform-async-to-generator": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "apollo-boost": "^0.4.9",
+    "apollo-cache-inmemory": "^1.6.6",
+    "apollo-client": "^2.6.10",
+    "apollo-link": "^1.2.14",
+    "apollo-link-http": "^1.5.17",
+    "babel-loader": "^8.1.0",
+    "css-loader": "^3.5.2",
+    "graphql": "^15.5.0",
+    "graphql-loader": "^1.2.1",
+    "graphql-request": "^3.4.0",
+    "graphql-tag": "^2.12.3",
+    "html-loader": "^1.1.0",
+    "html-webpack-plugin": "^4.2.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "vue": "^2.6.12",
+    "vue-apollo": "^3.0.7",
+    "vue-loader": "^15.9.1",
+    "vue-template-compiler": "^2.6.11",
+    "vue-template-loader": "^1.1.0",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.0.0",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^7.0.0"
+    "@babel/core": "^7.13.14",
+    "@babel/preset-env": "^7.13.12",
+    "babel-loader": "^8.2.2",
+    "vue-cli-plugin-apollo": "~0.22.2",
+    "webpack": "^4.46.0",
+    "webpack-cli": "^3.3.0"
   },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/vue3-essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "rules": {}
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
   },
   "browserslist": [
     "> 1%",
     "last 2 versions",
-    "not dead"
-  ]
+    "not ie <= 8"
+  ],
+  "main": "webpack.config.js",
+  "license": "ISC"
 }
