@@ -46,3 +46,5 @@ new Vue({
 export default {
   runtimeCompiler: true
 }
+
+module.exports = {apolloClient, apolloProvider, App, Vue}

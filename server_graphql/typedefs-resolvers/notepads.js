@@ -137,7 +137,6 @@ const resolvers = {
             console.log("삭제 인자 : ", args);
 
             await db.Notepad.destroy({
-                // where: {name: args.name}
                 where: {
                     [Op.and]: [
                         {name: args.name},
