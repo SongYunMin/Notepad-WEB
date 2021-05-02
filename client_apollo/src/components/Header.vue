@@ -47,7 +47,6 @@ export default {
     async logout() {
       localStorage.removeItem('token');
       document.querySelector('.logout').setAttribute('id', 'true')
-      alert('로그아웃 되었습니다.');
       this.$emit('back', 0);
     },
   }
