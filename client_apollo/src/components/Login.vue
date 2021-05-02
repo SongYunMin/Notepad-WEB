@@ -49,7 +49,6 @@ export default {
       if (result.data.login === 'False') {
         alert('아이디와 패스워드가 일치하지 않습니다.')
       } else {
-        alert(`로그인 되었습니다.`)
         localStorage.setItem('token', result.data.login)
         this.$emit('sign-in', result.data.login)
       }

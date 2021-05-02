@@ -3,7 +3,7 @@
     <button @click="loadEvent" class="load" type="button">불러오기</button>
     <button @click="saveTab" class="save" type="button">저장하기</button>
     <button @click="addTab" class="addTabBT" type="button">탭 추가</button>
-    <button @click="logout" class="logout" type="button">로그아웃</button>
+    <button @click="logout" class="logout" type="button" id="false">로그아웃</button>
   </section>
 </template>
 
@@ -46,6 +46,7 @@ export default {
     },
     async logout() {
       localStorage.removeItem('token');
+      document.querySelector('.logout').setAttribute('id', 'true')
       alert('로그아웃 되었습니다.');
       this.$emit('back', 0);
     },
