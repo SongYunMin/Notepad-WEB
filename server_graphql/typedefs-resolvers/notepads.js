@@ -1,24 +1,8 @@
-const {gql} = require('apollo-server')
 const db = require('../models')
 const jwt = require('jsonwebtoken')
 const {Op} = require('sequelize')
 
 const SECRET_KEY = process.env.SECRET_KEY
-
-const typeDefs = gql`
-    type Notepad {
-        number: Int!
-        user_id: String!
-        name: String
-        memo: String
-        tab: Int!
-    },
-    
-    type InitData {
-        User_Data: User_Session,
-        Notepads: [Notepad]
-    },
-`
 
 function tokenDecode(token) {
     const decode = jwt.verify(token, SECRET_KEY);
@@ -155,6 +139,5 @@ const resolvers = {
 }
 
 module.exports = {
-    typeDefs: typeDefs,
     resolvers: resolvers
 }

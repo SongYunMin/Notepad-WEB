@@ -57,8 +57,8 @@ describe("Notepad Test", () => {
         const variables = {
             name: "KnowreKorea",
             memo: "Labs",
-            count: 4,
-            activeIndex: 4
+            count: 2,
+            activeIndex: 2
         }
         const result = await modules.query({query: query, variables: variables});
         console.log("저장 결과 : ", result.data.saveNotepad);

@@ -1,4 +1,3 @@
-const {gql} = require('apollo-server-express')
 const db = require('../models')
 const promisify = require('util').promisify;
 const crypto = require('crypto');
@@ -7,19 +6,7 @@ require('dotenv').config();
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
-const typeDefs = gql`
-    type User {
-        ID: String!
-        pw: String!
-        nickname: String!
-        salt: String!
-    }
-    type User_Session {
-        user_id: String!
-        count: Int!
-        active: Int!
-    }
-`
+
 
 const resolvers = {
     Query: {
@@ -69,6 +56,5 @@ const resolvers = {
 }
 
 module.exports = {
-    typeDefs: typeDefs,
     resolvers: resolvers
 }
