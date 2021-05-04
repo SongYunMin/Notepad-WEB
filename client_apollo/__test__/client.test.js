@@ -3,7 +3,6 @@ const puppeteer = require('puppeteer');
 let browser, page;
 
 describe("client Test", () => {
-    // 테스트를 위해 로그인을 수행
     beforeEach(async () => {
         browser = await puppeteer.launch({headless: false});
         page = await browser.newPage();
@@ -14,15 +13,13 @@ describe("client Test", () => {
         await page.goto('http://localhost:8080', {waitUntil: 'domcontentloaded'});
         await page.type('.idInput', "1234");
         await page.type('.pwInput', "1234");
-        await page.click('.signIn');
-
         await snapshot('User-Before');
+        await page.click('.signIn');
     })
 
     it('Logout Test', async () => {
-        await page.waitForSelector('.logout', {timeout: 2000});
+        await page.waitForSelector('.logout', {timeout: 1000});
         await page.click('.logout');
-
         try {
             await page.waitForSelector('.login', {timeout: 1000});
         }catch (err){
@@ -51,12 +48,15 @@ describe("client Test", () => {
         await browser.close();
     })
 
+    // it('Delete Test', async () => {
+    //     await page.waitForSelector('.close-button', {timeout: 1000});
+    // })
+
     it('load Test', async () => {
         await page.waitForSelector('.load', {timeout: 1000});
         await page.click('.load');
         page.on('dialog', async dialog => {
-            console.log(dialog.message());
-            await dialog.accept( "Hello" );
+            await dialog.accept("Test");
         })
     })
 })
