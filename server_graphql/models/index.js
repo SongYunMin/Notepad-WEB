@@ -11,7 +11,6 @@ const db = {};
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
-
 db.User = require('./user')(sequelize, Sequelize);
 db.User_SESSION = require('./user_session')(sequelize, Sequelize);
 db.Notepad = require('./notepad')(sequelize, Sequelize);

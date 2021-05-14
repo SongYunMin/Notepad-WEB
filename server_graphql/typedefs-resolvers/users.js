@@ -6,8 +6,6 @@ require('dotenv').config();
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
-
-
 const resolvers = {
     Query: {
         idCheck: async (parent, args) => {
