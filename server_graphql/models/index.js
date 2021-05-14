@@ -18,4 +18,5 @@ db.Notepad = require('./notepad')(sequelize, Sequelize);
 db.User.hasOne(db.User_SESSION, {foreignKey: 'user_id', sourceKey: "ID"});
 db.User.hasMany(db.Notepad, {foreignKey: 'user_id', sourceKey: "ID"});
 
+console.log("테스트");
 module.exports = db;
