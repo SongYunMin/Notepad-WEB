@@ -5,7 +5,6 @@ const users = require('./typedefs-resolvers/users')
 const notepads = require('./typedefs-resolvers/notepads')
 const schema = require('./typedefs-resolvers/schema');
 
-
 const typeDefs = [
     queries,
     mutations,

@@ -23,10 +23,16 @@ const resolvers = {
             const initUserSessionResult = await db.User_SESSION.findOne({
                 where: {user_id: decode.ID}
             });
+            const [test] = await db.Notepad.findAll({
+                where: {user_id: decode.ID}
+            })
+            console.log("이건 뭐냐고,, : ", test);
 
             const initNotepadResult = await db.Notepad.findAll({
                 where: {user_id: decode.ID}
             })
+
+            console.log("이게 정상이지..", initNotepadResult);
 
             if (initUserSessionResult === null || initNotepadResult === null) {
                 return JSON.stringify({DATA: "DATA_NOT_FOUND"});
