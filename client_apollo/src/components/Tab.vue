@@ -1,8 +1,7 @@
 <template>
   <li class="tab-main">
     <input v-model='item.name' type="button" @click='showTab' class="tab-button"/>
-    <button @click='closeTab'
-            class="close-button">X</button>
+    <button @click='closeTab' class="close-button">X</button>
   </li>
 </template>
 

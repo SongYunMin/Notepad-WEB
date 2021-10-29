@@ -33,7 +33,6 @@ export default {
     changeComponent (num) {
       this.check = num
     },
-    // TODO :  우선 아이디 바인딩해서 진행?
     loginInfo(id){
       this.id = id
       console.log("정상 로그인 : ", this.id);
